@@ -1,0 +1,18 @@
+{
+  "name": "amar-sahayata-secure-ai",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "update": "node updater.js",
+    "check": "node --check server.js && node --check updater.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "express-rate-limit": "^8.0.1",
+    "cheerio": "^1.1.2",
+    "dotenv": "^17.2.1"
+  }
+}

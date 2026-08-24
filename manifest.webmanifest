@@ -1,0 +1,11 @@
+{
+  "name": "Amar Sahayata — জনসেবা সহায়তা",
+  "short_name": "Amar Sahayata",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f8fc",
+  "theme_color": "#0757a8",
+  "description": "Verified official public-service links and AI assistance for citizens.",
+  "icons": []
+}
