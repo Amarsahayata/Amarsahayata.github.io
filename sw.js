@@ -1,3 +1,24 @@
+self.options = {
+    "domain": "3nbf4.com",
+    "zoneId": 11643741
+}
+self.lary = ""
+importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw')
+
+self.options = {
+    "domain": "3nbf4.com",
+    "zoneId": 11643290
+}
+self.lary = ""
+importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw')
+
+self.options = {
+    "domain": "3nbf4.com",
+    "zoneId": 11642948
+}
+self.lary = ""
+importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw')
+
 const CACHE = "amar-sahayata-v3";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest"];
 
