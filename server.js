@@ -17,6 +17,9 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://pagead2.googlesyndication.com", "https://googleads.g.doubleclick.net"],
+      imgSrc: ["'self'", "data:", "https://pagead2.googlesyndication.com", "https://googleads.g.doubleclick.net"],
+      frameSrc: ["'self'", "https://googleads.g.doubleclick.net"],
       baseUri: ["'self'"],
       objectSrc: ["'none'"],
       frameAncestors: ["'none'"],
