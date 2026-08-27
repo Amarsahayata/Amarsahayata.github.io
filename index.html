@@ -137,6 +137,30 @@ footer{background:#062e60;color:#dce9f8;padding:42px 20px 18px}.foot{max-width:1
 </div></section>
 </main>
 
+<section class="contact-card" id="contact">
+  <div class="contact-icon">📞</div>
+  <div class="contact-content">
+    <div class="contact-label">💼 অনলাইন পরিষেবা ও ঘরে বসে কাজের সহায়তা</div>
+    <h2>Online Service, Tax Return, P-Tax ইত্যাদি বা ঘরে বসে কোনও কাজ করাতে চান?</h2>
+    <p>Online service বা এই ধরনের কোনও কাজ, Tax Return, P-Tax ইত্যাদি অথবা বাড়িতে বসে কোনও কাজ করাতে চাইলে যোগাযোগ করুন।</p>
+    <div class="contact-details">
+      <div><span>👤</span><b>Name:</b> Nilay Das</div>
+      <div><span>📱</span><b>Contact No.:</b> <a href="tel:7908638549">7908638549</a></div>
+      <div><span>📍</span><b>Address:</b> Debagram, Nadia - 741137</div>
+    </div>
+    <a class="contact-call" href="tel:7908638549">📞 এখনই যোগাযোগ করুন</a>
+  </div>
+</section>
+
+<section class="visitor-counter" aria-label="Website visitor count">
+  <div class="visitor-glow">👁️</div>
+  <div>
+    <div class="visitor-title">Website Visitor</div>
+    <div class="visitor-sub">এই সাইটে মোট ভিজিট</div>
+  </div>
+  <div class="visitor-number" id="visitorCount" aria-live="polite">—</div>
+</section>
+
 <div class="disclaimer" style="max-width:1200px;margin:0 auto 20px;padding:12px 15px;border:1px solid #dce5ef;border-radius:12px;background:#fff;font-size:12px;color:#637086">⚠️ <b>Important:</b> Amar Sahayata is an independent citizen-help platform, not a Government of West Bengal website. The WB-style badge above is a custom citizen-help design, not an official government emblem. Government schemes and links can change; always verify on the linked official source before applying.</div>
 
 <footer><div class="foot"><div><h3>🇮🇳 Amar Sahayata</h3><p>সাধারণ মানুষের জন্য verified সরকারি তথ্যকে সহজ ভাষায় সাজানো independent citizen-help platform.</p></div><div><h3>দ্রুত লিঙ্ক</h3><a href="#schemes">সরকারি স্কিম</a><a href="#tools">টুলস</a><a href="#docs">ডকুমেন্ট</a><a href="#health">Ayushman</a></div><div><h3>Official</h3><a href="https://wb.gov.in/" target="_blank" rel="noopener">West Bengal Government</a><a href="https://beneficiary.nha.gov.in/" target="_blank" rel="noopener">PMJAY Beneficiary</a><a href="https://oasis.wb.gov.in/" target="_blank" rel="noopener">OASIS</a></div><div><h3>Update</h3><p>Last content check: <span id="contentCheckDate">Today</span></p><p>🇮🇳 Proudly Made in India</p></div></div><div class="credit"><span>🇮🇳 India • West Bengal</span><span>© 2026 Amar Sahayata</span><span>Independent citizen-help platform</span></div></footer>
@@ -183,4 +207,45 @@ if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serv
 }
 </style>
 
+<style>
+.contact-card{
+  max-width:1200px;margin:22px auto;padding:26px 28px;border-radius:24px;
+  background:linear-gradient(135deg,#ffffff,#eef7ff 55%,#effbf4);
+  border:1px solid #dbe7f2;box-shadow:var(--shadow);display:flex;gap:22px;align-items:center;
+}
+.contact-icon{width:66px;height:66px;flex:0 0 66px;border-radius:20px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#0757a8,#0b8a51);font-size:30px;box-shadow:0 10px 25px #0757a833}
+.contact-content{flex:1}.contact-label{display:inline-block;background:#e3f4ea;color:#087542;border-radius:99px;
+  padding:5px 11px;font-size:12px;font-weight:800;margin-bottom:7px}
+.contact-card h2{margin:0 0 6px;color:var(--navy);font-size:clamp(20px,2.5vw,29px)}
+.contact-card p{margin:0 0 14px;color:#58677b}
+.contact-details{display:flex;flex-wrap:wrap;gap:10px 24px;font-size:14px;color:#33445a}
+.contact-details>div{display:flex;align-items:center;gap:6px}.contact-details span{font-size:17px}
+.contact-details a{color:var(--blue);font-weight:800}.contact-call{display:inline-block;margin-top:16px;padding:10px 15px;border-radius:12px;
+  background:linear-gradient(135deg,#0757a8,#0b75dc);color:#fff;font-weight:800}
+.visitor-counter{max-width:1200px;margin:0 auto 22px;padding:16px 20px;border:1px solid #dbe7f2;border-radius:18px;
+  background:#fff;box-shadow:0 10px 28px rgba(16,55,96,.08);display:flex;align-items:center;gap:13px}
+.visitor-glow{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#eaf3ff;font-size:21px}
+.visitor-title{font-weight:900;color:var(--navy);font-size:15px}.visitor-sub{font-size:12px;color:var(--muted)}
+.visitor-number{margin-left:auto;min-width:92px;text-align:center;font-weight:900;font-size:23px;letter-spacing:2px;color:#087d4b;
+  background:#effaf4;border:1px solid #ccebd9;border-radius:12px;padding:7px 12px}
+@media(max-width:650px){
+  .contact-card{margin:18px 15px;padding:20px;align-items:flex-start}.contact-icon{width:52px;height:52px;flex-basis:52px;font-size:24px;border-radius:15px}
+  .contact-details{display:grid;gap:8px}.visitor-counter{margin:0 15px 18px}
+}
+</style>
+<script>
+async function loadVisitorCount(){
+  const el=document.getElementById('visitorCount');
+  if(!el)return;
+  try{
+    const r=await fetch('/api/visitor',{cache:'no-store'});
+    const d=await r.json();
+    if(r.ok && Number.isFinite(Number(d.count))){
+      el.textContent=Number(d.count).toLocaleString('en-IN');
+    }else{el.textContent='—';}
+  }catch(e){el.textContent='—';}
+}
+loadVisitorCount();
+</script>
 </body></html>

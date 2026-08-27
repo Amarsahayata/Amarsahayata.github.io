@@ -3,12 +3,31 @@ import express from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import path from "node:path";
+import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 3000);
 const ORIGIN = process.env.ALLOWED_ORIGIN || "";
+const COUNTER_FILE = path.join(__dirname, "visitor-count.json");
+let visitorCount = 0;
+try {
+  if (fs.existsSync(COUNTER_FILE)) {
+    const saved = JSON.parse(fs.readFileSync(COUNTER_FILE, "utf8"));
+    visitorCount = Number.isFinite(saved.count) ? Math.max(0, Math.floor(saved.count)) : 0;
+  }
+} catch (err) {
+  console.error("Could not read visitor counter:", err.message);
+}
+function saveVisitorCount() {
+  try {
+    fs.writeFileSync(COUNTER_FILE, JSON.stringify({ count: visitorCount }), "utf8");
+  } catch (err) {
+    console.error("Could not save visitor counter:", err.message);
+  }
+}
+
 
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
@@ -50,6 +69,18 @@ const apiLimiter = rateLimit({
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: { error: "Too many requests. Please try again later." }
+});
+
+app.get("/api/visitor", (req, res) => {
+  // Count a browser once per 30 minutes so refreshes do not inflate the number.
+  const hasVisitCookie = /(?:^|;\s*)as_visit=/.test(req.headers.cookie || "");
+  if (!hasVisitCookie) {
+    visitorCount += 1;
+    saveVisitorCount();
+    res.setHeader("Set-Cookie", `as_visit=1; Max-Age=1800; Path=/; HttpOnly; SameSite=Lax${process.env.NODE_ENV === "production" ? "; Secure" : ""}`);
+  }
+  res.set("Cache-Control", "no-store");
+  res.json({ count: visitorCount });
 });
 
 app.get("/api/health", (req, res) => {
