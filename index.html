@@ -92,6 +92,282 @@ footer{background:#062e60;color:#dce9f8;padding:42px 20px 18px}.foot{max-width:1
 <script async custom-element="amp-auto-ads"
         src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
 </script>
+
+<style id="tricolor-2026-visual-layer">
+/* === 2026 Tricolor Premium Visual Layer ===
+   Design-only override. Existing content, links, scripts and functionality unchanged.
+*/
+:root{
+  --india-saffron:#ff8a1f;
+  --india-green:#138808;
+  --india-navy:#063b78;
+  --india-blue:#0757a8;
+  --chakra-blue:#1b4f9c;
+  --premium-bg:#f7faf8;
+  --glass:rgba(255,255,255,.72);
+  --glass-strong:rgba(255,255,255,.88);
+  --tricolor-shadow:0 22px 70px rgba(6,59,120,.12);
+}
+
+/* Rich Indian tricolor-inspired page background instead of flat white */
+body{
+  background:
+    radial-gradient(900px 520px at 8% 5%, rgba(255,138,31,.14), transparent 58%),
+    radial-gradient(850px 520px at 92% 52%, rgba(19,136,8,.13), transparent 58%),
+    linear-gradient(180deg,#fffaf4 0%,#f9fbff 43%,#f4fbf5 100%);
+}
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.55;
+  background:
+    linear-gradient(180deg,
+      rgba(255,138,31,.035) 0 33%,
+      rgba(255,255,255,0) 33% 66%,
+      rgba(19,136,8,.035) 66% 100%);
+}
+
+/* Premium top tricolor rail */
+body:before{
+  height:5px;
+  background:linear-gradient(90deg,
+    var(--india-saffron) 0 33.333%,
+    #ffffff 33.333% 66.666%,
+    var(--india-green) 66.666% 100%);
+  box-shadow:0 1px 12px rgba(6,59,120,.14);
+}
+
+/* Navigation becomes translucent premium glass */
+nav{
+  background:rgba(255,255,255,.78)!important;
+  border-bottom:1px solid rgba(6,59,120,.10);
+  box-shadow:0 8px 30px rgba(6,59,120,.06);
+}
+.navin{max-width:1260px}
+.brand b{
+  background:linear-gradient(90deg,var(--india-saffron),var(--india-navy) 48%,var(--india-green));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.seal{
+  background:conic-gradient(
+    var(--india-saffron) 0 33%,
+    #fff 33% 66%,
+    var(--india-green) 66% 100%);
+  box-shadow:0 10px 30px rgba(6,59,120,.16),0 0 0 5px rgba(255,255,255,.7);
+}
+
+/* Hero: saffron -> white -> green atmosphere */
+.hero{
+  background:
+    radial-gradient(520px 320px at 4% 50%,rgba(255,138,31,.18),transparent 70%),
+    radial-gradient(520px 340px at 96% 50%,rgba(19,136,8,.17),transparent 70%),
+    linear-gradient(115deg,#fff7ed 0%,#ffffff 47%,#f1faf3 100%);
+  border-bottom:1px solid rgba(6,59,120,.06);
+}
+.hero:before{
+  background:radial-gradient(circle,rgba(255,138,31,.62),rgba(255,138,31,0) 68%);
+}
+.hero:after{
+  background:radial-gradient(circle,rgba(19,136,8,.55),rgba(19,136,8,0) 68%);
+}
+.hero h1 em{
+  background:linear-gradient(90deg,var(--india-saffron),var(--india-navy) 48%,var(--india-green));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.eyebrow{
+  border-color:rgba(255,138,31,.22)!important;
+  background:linear-gradient(90deg,rgba(255,138,31,.12),rgba(255,255,255,.72),rgba(19,136,8,.10))!important;
+}
+.search{
+  background:rgba(255,255,255,.80)!important;
+  border-color:rgba(6,59,120,.12)!important;
+  box-shadow:0 18px 48px rgba(6,59,120,.12)!important;
+  backdrop-filter:blur(14px);
+}
+.search button{
+  background:linear-gradient(135deg,var(--india-saffron),var(--india-navy) 52%,var(--india-green))!important;
+}
+.chip{
+  background:rgba(255,255,255,.68)!important;
+  border-color:rgba(6,59,120,.11)!important;
+}
+.chip:hover{
+  border-color:rgba(255,138,31,.42)!important;
+}
+
+/* Hero card gets a premium tricolor frame */
+.hero-card{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.90),rgba(245,250,255,.72)) padding-box,
+    linear-gradient(145deg,var(--india-saffron),#fff 48%,var(--india-green)) border-box!important;
+  border:2px solid transparent!important;
+  box-shadow:0 28px 90px rgba(6,59,120,.17),0 0 55px rgba(255,138,31,.08)!important;
+}
+.govtag,.datebadge{
+  background:rgba(255,255,255,.78)!important;
+  border-color:rgba(6,59,120,.11)!important;
+  backdrop-filter:blur(16px);
+}
+.govtag{
+  box-shadow:0 12px 30px rgba(6,59,120,.10),inset 3px 0 0 var(--india-saffron);
+}
+.datebadge{
+  box-shadow:0 12px 30px rgba(6,59,120,.10),inset 3px 0 0 var(--india-green);
+}
+.datebadge span{color:var(--india-green)!important}
+
+/* Section/category cards */
+main{position:relative}
+main:before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-15px;
+  transform:translateX(-50%);
+  width:min(92%,980px);
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--india-saffron),#fff,var(--india-green),transparent);
+  opacity:.65;
+}
+.cat{
+  background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(247,250,255,.66))!important;
+  border:1px solid rgba(6,59,120,.10)!important;
+  box-shadow:0 16px 42px rgba(6,59,120,.09)!important;
+  backdrop-filter:blur(14px);
+}
+.cat:nth-child(3n+1){border-top:3px solid rgba(255,138,31,.75)!important}
+.cat:nth-child(3n+2){border-top:3px solid rgba(27,79,156,.55)!important}
+.cat:nth-child(3n){border-top:3px solid rgba(19,136,8,.72)!important}
+.cat:hover{
+  box-shadow:0 24px 55px rgba(6,59,120,.14)!important;
+}
+
+/* Main panels */
+.panel,.feature,.contact-card,.visitor-counter{
+  background:rgba(255,255,255,.76)!important;
+  border-color:rgba(6,59,120,.10)!important;
+  box-shadow:var(--tricolor-shadow)!important;
+  backdrop-filter:blur(16px);
+}
+.panel h2{
+  position:relative;
+}
+.panel h2:after{
+  content:"";
+  display:block;
+  width:64px;
+  height:3px;
+  margin-top:7px;
+  border-radius:9px;
+  background:linear-gradient(90deg,var(--india-saffron),var(--india-green));
+}
+.scheme{
+  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(248,251,255,.70))!important;
+  border-color:rgba(6,59,120,.10)!important;
+  box-shadow:0 12px 32px rgba(6,59,120,.07)!important;
+  backdrop-filter:blur(12px);
+}
+.scheme:hover{
+  box-shadow:0 20px 45px rgba(6,59,120,.13)!important;
+}
+
+/* Buttons and verified badges */
+.primary,.contact-call{
+  background:linear-gradient(135deg,var(--india-saffron),var(--india-navy) 52%,var(--india-green))!important;
+}
+.verified{
+  background:rgba(19,136,8,.08)!important;
+  border-color:rgba(19,136,8,.18)!important;
+  color:var(--india-green)!important;
+}
+
+/* AI area: tricolor futuristic glow */
+.ai{
+  background:
+    radial-gradient(400px 200px at 10% 0,rgba(255,138,31,.12),transparent 70%),
+    radial-gradient(400px 200px at 90% 100%,rgba(19,136,8,.12),transparent 70%),
+    linear-gradient(135deg,rgba(247,243,255,.82),rgba(240,248,255,.82))!important;
+  border:1px solid rgba(27,79,156,.12)!important;
+}
+.ai-btn,.ai-float{
+  background:linear-gradient(135deg,var(--india-saffron),#6a35e8 42%,var(--india-blue) 72%,var(--india-green))!important;
+}
+
+/* Banner accents */
+.banner{
+  background:linear-gradient(90deg,rgba(255,138,31,.10),rgba(255,255,255,.72),rgba(19,136,8,.10))!important;
+  border-color:rgba(255,138,31,.18)!important;
+}
+
+/* Footer retains deep professional navy with tricolor edge */
+footer{
+  background:
+    linear-gradient(180deg,rgba(6,59,120,.98),rgba(3,28,58,.99))!important;
+  border-top:4px solid transparent;
+  border-image:linear-gradient(90deg,var(--india-saffron),#fff,var(--india-green)) 1;
+}
+
+/* Small premium tricolor separators */
+.source:hover{color:var(--india-blue)!important}
+.navlinks a:hover{
+  background:linear-gradient(90deg,rgba(255,138,31,.10),rgba(19,136,8,.08))!important;
+}
+
+/* Keep dark mode fully usable */
+.dark body{}
+.dark{
+  background:
+    radial-gradient(700px 420px at 4% 4%,rgba(255,138,31,.10),transparent 65%),
+    radial-gradient(700px 420px at 96% 60%,rgba(19,136,8,.09),transparent 65%),
+    #091321!important;
+}
+.dark nav{
+  background:rgba(11,20,34,.84)!important;
+  border-bottom-color:#25364c!important;
+}
+.dark .hero{
+  background:
+    radial-gradient(500px 300px at 0 50%,rgba(255,138,31,.09),transparent 70%),
+    radial-gradient(500px 300px at 100% 50%,rgba(19,136,8,.09),transparent 70%),
+    linear-gradient(120deg,#0d1b2c,#101d2e)!important;
+}
+.dark .cat,.dark .panel,.dark .scheme,.dark .feature,.dark .contact-card,.dark .visitor-counter{
+  background:rgba(19,34,53,.88)!important;
+}
+.dark .search,.dark .chip,.dark .govtag,.dark .datebadge{
+  background:rgba(19,34,53,.82)!important;
+}
+.dark .banner{
+  background:linear-gradient(90deg,rgba(255,138,31,.08),rgba(19,34,53,.85),rgba(19,136,8,.08))!important;
+}
+
+/* Mobile polish */
+@media(max-width:560px){
+  body{
+    background:
+      radial-gradient(520px 300px at 0 4%,rgba(255,138,31,.12),transparent 68%),
+      radial-gradient(520px 300px at 100% 58%,rgba(19,136,8,.11),transparent 68%),
+      linear-gradient(180deg,#fffaf5,#f8fbff 48%,#f5fbf6);
+  }
+  .hero{
+    background:
+      radial-gradient(300px 230px at 0 50%,rgba(255,138,31,.13),transparent 72%),
+      radial-gradient(300px 230px at 100% 60%,rgba(19,136,8,.12),transparent 72%),
+      #fff;
+  }
+  .hero-card{
+    box-shadow:0 20px 60px rgba(6,59,120,.15)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <amp-auto-ads type="adsense"
@@ -110,7 +386,12 @@ footer{background:#062e60;color:#dce9f8;padding:42px 20px 18px}.foot{max-width:1
 <p>সরকারি স্কিম, স্বাস্থ্য, স্কলারশিপ, চাকরি, ডকুমেন্ট ও দরকারি সরকারি লিঙ্ক—এক জায়গায়, সহজ ভাষায়। Broken/dead links বাদ দিয়ে verified official sources রাখা হয়েছে।</p>
 <div class="search"><input id="search" placeholder="স্কিম, সার্টিফিকেট, চাকরি বা Ayushman খুঁজুন…" onkeydown="if(event.key==='Enter')runSearch()"><button onclick="runSearch()">🔎 খুঁজুন</button></div>
 <div class="chips"><span class="chip" onclick="quick('Ayushman')">Ayushman Card</span><span class="chip" onclick="quick('scholarship')">Scholarship</span><span class="chip" onclick="quick('Krishak')">Krishak Bandhu</span><span class="chip" onclick="quick('certificate')">Certificate</span></div>
-</div><div class="hero-card"><div class="chakra"></div><div class="govtag">WEST BENGAL<br><small>Citizen Help Design</small></div><div class="datebadge"><b id="liveDate">TODAY</b><span id="liveTime">--:--:--</span></div></div></div></section>
+</div><div class="hero-card"><div class="chakra"></div><div class="govtag">WEST BENGAL<br><small>Citizen Help Design</small></div><div class="datebadge">
+  <div class="date-kicker">📅 TODAY • আজ</div>
+  <b id="liveDate">29 Aug 2026</b>
+  <span id="liveBanglaDate">১৪ ভাদ্র ১৪৩৩ বঙ্গাব্দ</span>
+  <small id="liveTime">--:--:--</small>
+</div></div></div></section>
 
 <main>
 <div class="categories">
@@ -189,7 +470,32 @@ function askQuickAI(q){const input=document.getElementById('aiQuestion');input.v
 function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'))}
 if(localStorage.getItem('dark')==='true')document.body.classList.add('dark');
 async function askAI(){const input=document.getElementById('aiQuestion'),out=document.getElementById('aiAnswer'),q=input.value.trim();if(!q)return;if(/otp|pin|password|cvv|aadhaar|aadhar|bank account/i.test(q)){out.textContent='নিরাপত্তার জন্য OTP, PIN, password, CVV, Aadhaar বা bank-account তথ্য দেবেন না।';return}out.textContent='AI Mode চালু আছে — উত্তর তৈরি হচ্ছে…';try{const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});const d=await r.json();out.textContent=d.answer||'এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।'}catch(e){out.textContent='AI Mode সাময়িকভাবে সংযোগ পাচ্ছে না। কিছুক্ষণ পরে আবার চেষ্টা করুন।'}}
-function updateClock(){const now=new Date();const date=new Intl.DateTimeFormat('bn-IN',{day:'2-digit',month:'long',year:'numeric',timeZone:'Asia/Kolkata'}).format(now);const time=new Intl.DateTimeFormat('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}).format(now);const d=document.getElementById('liveDate'),t=document.getElementById('liveTime'),c=document.getElementById('contentCheckDate');if(d)d.textContent=date;if(t)t.textContent=time;if(c)c.textContent=date}updateClock();setInterval(updateClock,1000);
+function getBanglaDate(now){
+  const y=now.getFullYear(), m=now.getMonth(), day=now.getDate();
+  const start=new Date(y,3,14);
+  let by=y-593;
+  if(now<start){by=y-594;}
+  const monthNames=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  const monthDays=[31,31,31,31,30,30,30,30,30,30,30,30];
+  let diff=Math.floor((now-start)/86400000);
+  if(diff<0){
+    const prevStart=new Date(y-1,3,14);
+    diff=Math.floor((now-prevStart)/86400000);
+    by=y-594;
+  }
+  let mi=0;
+  while(mi<11 && diff>=monthDays[mi]){diff-=monthDays[mi];mi++;}
+  const bnDigits=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+  return bnDigits(diff+1)+' '+monthNames[mi]+' '+bnDigits(by)+' বঙ্গাব্দ';
+}
+function updateClock(){
+  const now=new Date();
+  const date=new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(now);
+  const bn=getBanglaDate(now);
+  const time=new Intl.DateTimeFormat('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}).format(now);
+  const d=document.getElementById('liveDate'),b=document.getElementById('liveBanglaDate'),t=document.getElementById('liveTime'),c=document.getElementById('contentCheckDate');
+  if(d)d.textContent=date;if(b)b.textContent=bn;if(t)t.textContent=time;if(c)c.textContent=date+' • '+bn;
+}updateClock();setInterval(updateClock,1000);
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
 </script>
 
@@ -257,4 +563,82 @@ async function loadVisitorCount(){
 }
 loadVisitorCount();
 </script>
+
+<style id="modern-2026-design">
+/* Amar Sahayata — 2026 visual system: presentation-only, content/functions preserved */
+:root{
+  --navy:#062a57;--blue:#1769e0;--green:#078a55;--saffron:#ff9b2f;
+  --bg:#f4f7fb;--card:rgba(255,255,255,.88);--line:rgba(26,69,112,.12);
+  --shadow:0 18px 60px rgba(17,53,91,.11);--shadow2:0 8px 30px rgba(17,53,91,.08);
+  --radius:24px;
+}
+body{background:
+ radial-gradient(circle at 8% 8%,rgba(23,105,224,.10),transparent 28rem),
+ radial-gradient(circle at 92% 18%,rgba(7,138,85,.09),transparent 26rem),
+ linear-gradient(180deg,#f8fbff 0%,#f3f7fb 55%,#eef4f8 100%);}
+body:before{height:3px;background:linear-gradient(90deg,#ff8a00 0 33.33%,#fff 33.33% 66.66%,#138808 66.66%);box-shadow:0 1px 10px rgba(7,70,130,.16)}
+.top{background:rgba(4,39,79,.94);backdrop-filter:blur(14px);padding:8px max(18px,5%);letter-spacing:.1px}
+nav{background:rgba(255,255,255,.82);border-bottom:1px solid rgba(28,73,118,.10);box-shadow:0 8px 30px rgba(15,54,92,.06);backdrop-filter:blur(18px)}
+.navin{max-width:1240px;padding:11px 18px}
+.brand b{letter-spacing:-.5px}.seal{box-shadow:0 10px 28px rgba(23,83,145,.18)}
+.navbtn{box-shadow:0 4px 14px rgba(20,60,100,.06)}
+.hero{background:
+ radial-gradient(circle at 80% 20%,rgba(255,174,80,.20),transparent 22rem),
+ linear-gradient(135deg,#eaf4ff 0%,#fff 48%,#eaf9f1 100%);
+ border-bottom:1px solid rgba(30,80,130,.08)}
+.hero-in{max-width:1240px;padding:72px 20px 62px}
+.eyebrow{box-shadow:0 6px 20px rgba(8,125,75,.08)}
+.hero h1{font-weight:900;letter-spacing:-2px}
+.hero p{line-height:1.75}
+.search{border-color:rgba(34,91,148,.14);box-shadow:0 18px 45px rgba(16,55,96,.10);transition:.25s}
+.search:focus-within{transform:translateY(-2px);box-shadow:0 22px 55px rgba(16,75,140,.16);border-color:rgba(23,105,224,.32)}
+.search button,.primary,.contact-call{box-shadow:0 8px 22px rgba(7,87,168,.22)}
+.hero-card{border:1px solid rgba(255,255,255,.65);box-shadow:0 25px 70px rgba(26,75,120,.16);min-height:390px}
+.hero-card:before{box-shadow:0 25px 55px rgba(23,77,142,.15)}
+.govtag,.datebadge{border:1px solid rgba(22,73,121,.08);box-shadow:0 15px 35px rgba(24,55,95,.12);backdrop-filter:blur(10px)}
+.datebadge{min-width:158px}
+.date-kicker{font-size:10px;font-weight:900;color:#64748b;letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px}
+.datebadge b{font-size:15px}.datebadge span{display:block;font-size:13px;font-weight:800;color:#087542;margin-top:2px}.datebadge small{display:block;color:#64748b;margin-top:3px}
+main{max-width:1240px;padding-top:34px}
+.categories{gap:14px}
+.cat{border-color:rgba(26,69,112,.10);box-shadow:var(--shadow2);background:rgba(255,255,255,.86);backdrop-filter:blur(10px)}
+.cat .ico{font-size:27px}
+.panel,.feature,.contact-card,.visitor-counter{border-color:rgba(26,69,112,.10);box-shadow:var(--shadow2);background:var(--card);backdrop-filter:blur(12px)}
+.panel{padding:22px}
+.panel h2{letter-spacing:-.4px}
+.scheme{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(246,250,255,.82));border-color:rgba(26,69,112,.10)}
+.scheme b{font-size:16px}
+.banner{border-color:rgba(190,145,80,.16);box-shadow:var(--shadow2)}
+.feature{min-height:175px}
+.ai{background:linear-gradient(135deg,rgba(245,240,255,.94),rgba(238,247,255,.94))}
+.ai-answer{box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.contact-card{margin-top:24px}
+footer{background:linear-gradient(145deg,#041e3d,#07376e);position:relative;overflow:hidden}
+footer:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;right:-160px;top:-250px;background:rgba(44,145,255,.10);filter:blur(5px)}
+.nilay-das-watermark{letter-spacing:5px}
+.ai-float{box-shadow:0 16px 40px rgba(31,60,130,.25);border:1px solid rgba(255,255,255,.18)}
+@media (min-width:901px){
+  .navlinks a{padding:8px 5px;border-radius:9px}.navlinks a:hover{background:#eef5ff}
+  .schemegrid{gap:15px}.tool{border-radius:16px}
+}
+@media (max-width:900px){
+  .hero-in{padding-top:54px}.hero-card{min-height:330px}
+  .categories{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .top{padding:7px 12px}.top>span:last-child{display:none}
+  .hero-in{padding:40px 15px 32px}.hero h1{font-size:39px;letter-spacing:-1.4px}
+  .hero p{font-size:16px}.hero-card{min-height:285px;border-radius:25px}
+  .datebadge{min-width:145px;padding:9px 11px}
+  .datebadge b{font-size:13px}.datebadge span{font-size:11px}.datebadge small{font-size:10px}
+  main{padding:22px 15px 38px}.categories{gap:8px}
+  .cat{border-radius:15px}.panel{padding:16px;border-radius:18px}
+  .banner{border-radius:18px;padding:17px}.feature{min-height:auto}
+  .contact-card{margin-left:15px;margin-right:15px;border-radius:20px}
+}
+@media (prefers-reduced-motion:reduce){
+  .search:focus-within{transform:none}
+}
+</style>
+
 </body></html>
