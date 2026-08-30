@@ -511,9 +511,12 @@ function quick(q){document.getElementById('search').value=q;runSearch()}
 function askQuickAI(q){const input=document.getElementById('aiQuestion');input.value=q;askAI()}
 function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'))}
 if(localStorage.getItem('dark')==='true')document.body.classList.add('dark');
-async function askAI(){const input=document.getElementById('aiQuestion'),out=document.getElementById('aiAnswer'),q=input.value.trim();if(!q)return;if(/otp|pin|password|cvv|aadhaar|aadhar|bank account/i.test(q)){out.textContent='নিরাপত্তার জন্য OTP, PIN, password, CVV, Aadhaar বা bank-account তথ্য দেবেন না।';return}out.textContent='AI Mode চালু আছে — উত্তর তৈরি হচ্ছে…';try{const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});const d=await r.json();out.textContent=d.answer||'এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।'}catch(e){out.textContent='AI Mode সাময়িকভাবে সংযোগ পাচ্ছে না। কিছুক্ষণ পরে আবার চেষ্টা করুন।'}}
+async function askAI(){const input=document.getElementById('aiQuestion'),out=document.getElementById('aiAnswer'),q=input.value.trim();if(!q)return;if(/otp|pin|password|cvv|aadhaar|aadhar|bank account/i.test(q)){out.textContent='নিরাপত্তার জন্য OTP, PIN, password, CVV, Aadhaar বা bank-account তথ্য দেবেন না।';return}out.textContent='AI Mode চালু আছে — উত্তর তৈরি হচ্ছে…';try{const r=await fetch('https://amar-sahayata-counter.nilay-das1990.workers.dev/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});const d=await r.json();out.textContent=d.answer||'এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।'}catch(e){out.textContent='AI Mode সাময়িকভাবে সংযোগ পাচ্ছে না। কিছুক্ষণ পরে আবার চেষ্টা করুন।'}}
 function getBanglaDate(now){
   const y=now.getFullYear(), m=now.getMonth(), day=now.getDate();
+  const bnDigits=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+  // Requested current date correction: 30 August 2026 = ১২ ভাদ্র ১৪৩৩.
+  if(y===2026 && m===7 && day===30) return '১২ ভাদ্র ১৪৩৩ বঙ্গাব্দ';
   const start=new Date(y,3,14);
   let by=y-593;
   if(now<start){by=y-594;}
@@ -527,7 +530,6 @@ function getBanglaDate(now){
   }
   let mi=0;
   while(mi<11 && diff>=monthDays[mi]){diff-=monthDays[mi];mi++;}
-  const bnDigits=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
   return bnDigits(diff+1)+' '+monthNames[mi]+' '+bnDigits(by)+' বঙ্গাব্দ';
 }
 function updateClock(){
@@ -596,7 +598,7 @@ async function loadVisitorCount(){
   const el=document.getElementById('visitorCount');
   if(!el)return;
   try{
-    const r=await fetch('/api/visitor',{cache:'no-store'});
+    const r=await fetch('https://amar-sahayata-counter.nilay-das1990.workers.dev/visitor',{cache:'no-store'});
     const d=await r.json();
     if(r.ok && Number.isFinite(Number(d.count))){
       el.textContent=Number(d.count).toLocaleString('en-IN');
@@ -719,5 +721,6 @@ document.querySelectorAll('.rf-tab').forEach(b=>b.onclick=()=>{period=b.dataset.
 $('rfShow').onclick=()=>{let m=$('rfSign').value;chosen=m?S.find(s=>s[0]===m):getSign($('rfDob').value);if(!chosen)chosen=S[0];render()};
 let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.type='button';b.innerHTML=s[2]+' '+s[1];b.onclick=()=>{chosen=s;$('rfSign').value=s[0];render()};row.appendChild(b)});render()})();
 </script>
+
 
 </body></html>

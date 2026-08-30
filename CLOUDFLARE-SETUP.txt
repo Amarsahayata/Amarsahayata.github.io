@@ -1,0 +1,13 @@
+AMAR SAHAYATA — GitHub Pages + Cloudflare Worker
+
+The existing website files and earning/verification code are preserved.
+index.html uses:
+- Visitor API: https://amar-sahayata-counter.nilay-das1990.workers.dev/visitor
+- AI API: https://amar-sahayata-counter.nilay-das1990.workers.dev/api/ask
+
+For AI to answer questions, the Cloudflare Worker must have:
+1) D1 binding: variable name DB -> amar-sahayata-db
+2) Workers AI binding: variable name AI -> Workers AI
+
+Use cloudflare-worker-ai.js as the Worker code, then Deploy.
+The GitHub Pages site remains static and unchanged apart from the API endpoints.
