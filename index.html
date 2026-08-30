@@ -368,6 +368,48 @@ footer{
 }
 </style>
 
+
+<style id="desktop-icon-flag-compat">
+/* Compatibility layer: visual rendering only; no existing functionality/content is removed. */
+.cat .ico,.scheme .sicon,.eyebrow,.date-kicker,.rf-zodiac button,.rf-top>b,.rf-tab{
+  font-family:"Noto Color Emoji","Segoe UI Emoji","Apple Color Emoji",system-ui,sans-serif;
+}
+.cat .ico,.scheme .sicon{display:block;visibility:visible;opacity:1}
+.hero-card:after{
+  content:"🇮🇳"!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  position:relative!important;
+  z-index:4!important;
+  font-family:"Noto Color Emoji","Segoe UI Emoji","Apple Color Emoji",sans-serif!important;
+  line-height:1!important;
+  text-rendering:geometricPrecision;
+}
+.hero-card:before{
+  z-index:3!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:.96!important;
+}
+.hero-card .chakra{z-index:5!important}
+.hero-card .govtag,.hero-card .datebadge{z-index:6!important}
+@media (min-width:901px){
+  .hero-card:after{font-size:155px!important}
+  .hero-card:before{width:250px!important;height:162px!important}
+  .cat .ico{font-size:29px!important;line-height:1.15!important}
+  .scheme .sicon{font-size:30px!important;line-height:1.15!important}
+}
+@media (max-width:900px){
+  .hero-card:after{font-size:135px!important}
+}
+@media (max-width:560px){
+  .hero-card:after{font-size:112px!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-card:after,.hero-card:before,.chakra{animation:none!important}
+}
+</style>
 </head>
 <body>
 <amp-auto-ads type="adsense"
@@ -389,7 +431,7 @@ footer{
 </div><div class="hero-card"><div class="chakra"></div><div class="govtag">WEST BENGAL<br><small>Citizen Help Design</small></div><div class="datebadge">
   <div class="date-kicker">📅 TODAY • আজ</div>
   <b id="liveDate">29 Aug 2026</b>
-  <span id="liveBanglaDate">১৪ ভাদ্র ১৪৩৩ বঙ্গাব্দ</span>
+  <span id="liveBanglaDate">১২ ভাদ্র ১৪৩৩ বঙ্গাব্দ</span>
   <small id="liveTime">--:--:--</small>
 </div></div></div></section>
 
@@ -640,5 +682,42 @@ footer:before{content:"";position:absolute;width:420px;height:420px;border-radiu
   .search:focus-within{transform:none}
 }
 </style>
+
+
+<!-- Additive Rashifol feature: existing content, links, ads and scripts are retained. -->
+<section id="rashifol" class="rashifol-section">
+<div class="rashifol-wrap">
+<div class="rashifol-heading"><span>✨ 2026 ASTRO GUIDE</span><h2>দৈনিক • সাপ্তাহিক • মাসিক • বার্ষিক রাশিফল</h2><p>জন্মতারিখ ও জন্মসময় দিয়ে নিজের সাধারণ সূর্যরাশি দেখুন, অথবা সরাসরি যেকোনো রাশি বেছে নিন।</p></div>
+<div class="rashifol-tabs">
+<button class="rf-tab active" data-p="daily">দৈনিক</button><button class="rf-tab" data-p="weekly">সাপ্তাহিক</button><button class="rf-tab" data-p="monthly">মাসিক</button><button class="rf-tab" data-p="yearly">বার্ষিক</button>
+</div>
+<div class="rashifol-grid">
+<div class="rf-card"><h3>🔮 আপনার রাশি</h3><p class="rf-muted">জন্মতারিখ ও সময় দিন। জন্মসময় ঐচ্ছিক।</p>
+<label>জন্মতারিখ<input id="rfDob" type="date"></label>
+<label>জন্মসময় <small>(ঐচ্ছিক)</small><input id="rfTime" type="time"></label>
+<label>রাশি<select id="rfSign"><option value="">রাশি নির্বাচন করুন</option>
+<option value="aries">মেষ ♈</option><option value="taurus">বৃষ ♉</option><option value="gemini">মিথুন ♊</option><option value="cancer">কর্কট ♋</option><option value="leo">সিংহ ♌</option><option value="virgo">কন্যা ♍</option><option value="libra">তুলা ♎</option><option value="scorpio">বৃশ্চিক ♏</option><option value="sagittarius">ধনু ♐</option><option value="capricorn">মকর ♑</option><option value="aquarius">কুম্ভ ♒</option><option value="pisces">মীন ♓</option></select></label>
+<button id="rfShow" class="rf-primary">রাশিফল দেখুন ✨</button><div class="rf-note">জন্মতারিখ থেকে সাধারণ সূর্যরাশি নির্ধারণ করা হয়। নির্ভুল জন্মছকের জন্য জন্মস্থানসহ পূর্ণ জ্যোতিষ গণনা দরকার।</div>
+</div>
+<div class="rf-card rf-result"><div class="rf-top"><div><span id="rfPeriod">আজকের রাশিফল</span><h3 id="rfTitle">একটি রাশি নির্বাচন করুন</h3></div><b id="rfIcon">☀️</b></div>
+<div id="rfDate" class="rf-date"></div><p id="rfText">রাশি নির্বাচন করে রাশিফল দেখুন।</p>
+<div class="rf-meters"><div>💼 কর্ম<strong id="rfWork">—</strong></div><div>💰 অর্থ<strong id="rfMoney">—</strong></div><div>❤️ সম্পর্ক<strong id="rfLove">—</strong></div><div>🌿 সুস্থতা<strong id="rfWell">—</strong></div></div>
+<div class="rf-note">রাশিফল বিনোদন ও সাধারণ নির্দেশনার জন্য; গুরুত্বপূর্ণ সিদ্ধান্তের একমাত্র ভিত্তি হিসেবে ব্যবহার করবেন না।</div></div>
+</div><div id="rfZodiac" class="rf-zodiac"></div>
+</div></section>
+<style>
+.rashifol-section{padding:65px 16px;background:linear-gradient(180deg,rgba(255,138,31,.06),rgba(255,255,255,.55),rgba(19,136,8,.06));overflow:hidden}.rashifol-wrap{max-width:1180px;margin:auto}.rashifol-heading{text-align:center}.rashifol-heading span{display:inline-block;padding:7px 13px;border-radius:99px;background:linear-gradient(90deg,#fff0df,#fff,#e9f7e8);font-weight:800;font-size:.75rem}.rashifol-heading h2{font-size:clamp(1.7rem,4vw,2.6rem);margin:12px 0 8px;background:linear-gradient(90deg,#ff8a1f,#164c92,#138808);-webkit-background-clip:text;color:transparent}.rashifol-heading p{opacity:.7}.rashifol-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:24px}.rf-tab{padding:11px 19px;border-radius:99px;border:1px solid #d8e0e8;background:#ffffffc9;font-weight:800}.rf-tab.active{color:white;background:linear-gradient(135deg,#ff8a1f,#164c92 55%,#138808)}.rashifol-grid{display:grid;grid-template-columns:.8fr 1.5fr;gap:18px}.rf-card{padding:23px;border-radius:24px;background:#ffffffc7;border:1px solid #d7e0e8;box-shadow:0 18px 55px #063b7817;backdrop-filter:blur(15px)}.rf-card label{display:block;font-weight:700;margin-top:14px}.rf-card input,.rf-card select{width:100%;box-sizing:border-box;margin-top:6px;padding:12px;border-radius:12px;border:1px solid #ccd8e3;background:#fff;font:inherit}.rf-primary{width:100%;margin-top:17px;padding:13px;border:0;border-radius:13px;color:#fff;font-weight:900;background:linear-gradient(135deg,#ff8a1f,#164c92,#138808)}.rf-muted,.rf-note{opacity:.65;font-size:.82rem;line-height:1.55}.rf-top{display:flex;justify-content:space-between}.rf-top>b{font-size:2.2rem}.rf-date{opacity:.6;font-size:.8rem}.rf-result p{line-height:1.8}.rf-meters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.rf-meters div{padding:12px;text-align:center;border-radius:14px;background:#f7fafc}.rf-meters strong{display:block;margin-top:5px}.rf-zodiac{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-top:17px}.rf-zodiac button{padding:12px 6px;border:1px solid #d7e0e8;border-radius:15px;background:#ffffffc7;font-weight:800}.rf-zodiac button:first-line{font-size:1.3rem}@media(max-width:760px){.rashifol-grid{grid-template-columns:1fr}.rf-meters{grid-template-columns:repeat(2,1fr)}.rf-zodiac{grid-template-columns:repeat(3,1fr)}}@media(max-width:430px){.rf-zodiac{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script>
+(()=>{const S=[['aries','মেষ','♈','🔥',[3,21],[4,19]],['taurus','বৃষ','♉','🌱',[4,20],[5,20]],['gemini','মিথুন','♊','💨',[5,21],[6,20]],['cancer','কর্কট','♋','🌊',[6,21],[7,22]],['leo','সিংহ','♌','☀️',[7,23],[8,22]],['virgo','কন্যা','♍','🌾',[8,23],[9,22]],['libra','তুলা','♎','⚖️',[9,23],[10,22]],['scorpio','বৃশ্চিক','♏','🦂',[10,23],[11,21]],['sagittarius','ধনু','♐','🏹',[11,22],[12,21]],['capricorn','মকর','♑','⛰️',[12,22],[1,19]],['aquarius','কুম্ভ','♒','💧',[1,20],[2,18]],['pisces','মীন','♓','🐟',[2,19],[3,20]]];
+const P={daily:'আজকের রাশিফল',weekly:'এই সপ্তাহের রাশিফল',monthly:'এই মাসের রাশিফল',yearly:'এই বছরের রাশিফল'};
+const T={daily:['আজ পরিকল্পনা ও ধারাবাহিকতার দিকে নজর দিন। ছোট সুযোগ কাজে লাগতে পারে।','কাজ গুছিয়ে করুন এবং অপ্রয়োজনীয় খরচ এড়ান।'],weekly:['এই সপ্তাহে ধৈর্য ও নিয়মিত পরিশ্রম ফল দিতে পারে। নতুন কিছু শেখার সুযোগ আসতে পারে।','আর্থিক বিষয়ে হিসাব করে চলুন এবং গুরুত্বপূর্ণ সিদ্ধান্তের আগে তথ্য যাচাই করুন।'],monthly:['এই মাসে লক্ষ্য পরিষ্কার রেখে এগোনো ভালো। ধীরে ধীরে স্থির অগ্রগতি হতে পারে।','বাজেট ও সময়ের পরিকল্পনা আপনাকে এগিয়ে রাখবে। সম্পর্কেও খোলামেলা যোগাযোগ জরুরি।'],yearly:['এই বছরে শেখা, পরিকল্পনা ও ধারাবাহিকতা গুরুত্বপূর্ণ হতে পারে। নতুন সুযোগ এলে যাচাই করে সিদ্ধান্ত নিন।','দীর্ঘমেয়াদি আর্থিক পরিকল্পনা ও দক্ষতা উন্নয়নে মন দিন। কাছের সম্পর্কগুলোতে সম্মান ও যোগাযোগ বজায় রাখুন।']};
+let period='daily',chosen=null;const $=id=>document.getElementById(id);
+function getSign(v){if(!v)return null;let d=new Date(v+'T00:00:00'),m=d.getMonth()+1,n=d.getDate();return S.find(s=>{let a=s[4],b=s[5];return a[0]===12?((m===12&&n>=a[1])||(m===1&&n<=b[1])):((m===a[0]&&n>=a[1])||(m===b[0]&&n<=b[1]))})}
+function render(){let s=chosen||S[0],d=new Date(),seed=s[0].length+d.getDate()+period.length;$('rfPeriod').textContent=P[period];$('rfTitle').textContent=s[1]+' '+s[2]+' — '+P[period];$('rfIcon').textContent=s[3];$('rfDate').textContent='আপডেট: '+d.toLocaleDateString('bn-BD',{day:'numeric',month:'long',year:'numeric'});$('rfText').textContent=T[period][seed%T[period].length];let v=['উজ্জ্বল','ভালো','স্থিতিশীল','অনুকূল','সতর্ক থাকুন'];$('rfWork').textContent=v[(seed+1)%5];$('rfMoney').textContent=v[(seed+2)%5];$('rfLove').textContent=v[(seed+3)%5];$('rfWell').textContent=v[(seed+4)%5]}
+document.querySelectorAll('.rf-tab').forEach(b=>b.onclick=()=>{period=b.dataset.p;document.querySelectorAll('.rf-tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
+$('rfShow').onclick=()=>{let m=$('rfSign').value;chosen=m?S.find(s=>s[0]===m):getSign($('rfDob').value);if(!chosen)chosen=S[0];render()};
+let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.type='button';b.innerHTML=s[2]+' '+s[1];b.onclick=()=>{chosen=s;$('rfSign').value=s[0];render()};row.appendChild(b)});render()})();
+</script>
 
 </body></html>
