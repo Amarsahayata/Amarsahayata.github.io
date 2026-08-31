@@ -459,7 +459,7 @@ footer{
 
 <div class="featuregrid"><section class="feature" id="docs"><div class="big">📁</div><h3>ডকুমেন্ট গাইড</h3><p class="muted">Caste, income, domicile ও অন্যান্য সরকারি e-service-এর official directory।</p></section><section class="feature" id="jobs"><div class="big">💼</div><h3>চাকরি ও স্কিল</h3><p class="muted">সরকারি portal-ভিত্তিক চাকরি/skill information-এর জন্য verified source ব্যবহার করুন।</p></section><section class="feature" id="students"><div class="big">🎓</div><h3>Student Corner</h3><p class="muted">Scholarship ও শিক্ষা সংক্রান্ত official portals এক জায়গায়।</p></section><section class="feature"><div class="big">🛡️</div><h3>Scam Safety</h3><p class="muted">OTP, PIN, CVV বা Aadhaar তথ্য কোনও third-party form-এ দেবেন না।</p></section></div>
 
-<section class="panel ai" id="ai-help"><div class="panelhead"><h2>🤖 Amar Sahayata AI Mode</h2><span class="verified">Official-source first</span></div><p class="muted">স্কিম, eligibility বা official link নিয়ে প্রশ্ন করুন। AI-কে OTP/PIN/password/CVV/Aadhaar/bank details দেবেন না।</p><div class="search"><input id="aiQuestion" maxlength="500" placeholder="যেমন: PM-JAY beneficiary portal কোনটি?" onkeydown="if(event.key==='Enter')askAI()"><button onclick="askAI()">🤖 জিজ্ঞাসা</button></div><div class="chips ai-prompts"><span class="chip" onclick="askQuickAI('PM-JAY beneficiary portal কোনটি?')">🏥 PM-JAY</span><span class="chip" onclick="askQuickAI('West Bengal সরকারি স্কিমের official directory কোথায়?')">🏛️ স্কিম</span><span class="chip" onclick="askQuickAI('OASIS scholarship-এর official portal কোনটি?')">🎓 Scholarship</span></div><div id="aiAnswer" class="ai-answer" aria-live="polite">প্রশ্ন লিখে AI Mode চালু করুন।</div></section>
+<section class="panel ai" id="ai-help"><div class="panelhead"><h2>🤖 Amar Sahayata AI Mode</h2><span class="verified">Official-source first</span></div><p class="muted">লিখে বা 🎤 মুখে প্রশ্ন করুন। AI উত্তরটি লেখা ও 🔊 voice—দুইভাবেই পাবেন। নতুন প্রশ্ন করলে আগের প্রশ্ন-উত্তর মুছে যাবে না।</p><div class="ai-controls"><select id="aiLanguage" aria-label="Voice language"><option value="auto">🌐 Auto / স্বয়ংক্রিয়</option><option value="bn-IN">বাংলা</option><option value="en-IN">English</option><option value="hi-IN">हिन्दी</option><option value="as-IN">অসমীয়া</option><option value="or-IN">ଓଡ଼ିଆ</option><option value="ta-IN">தமிழ்</option><option value="te-IN">తెలుగు</option><option value="mr-IN">मराठी</option><option value="gu-IN">ગુજરાતી</option><option value="pa-IN">ਪੰਜਾਬੀ</option></select><button type="button" class="voice-btn" id="aiMic" onclick="toggleAIVoice()" aria-label="Speak your question">🎤 বলুন</button></div><div class="search"><input id="aiQuestion" maxlength="500" placeholder="যেমন: PM-JAY beneficiary portal কোনটি?" onkeydown="if(event.key==='Enter')askAI()"><button onclick="askAI()">🤖 জিজ্ঞাসা</button></div><div class="chips ai-prompts"><span class="chip" onclick="askQuickAI('PM-JAY beneficiary portal কোনটি?')">🏥 PM-JAY</span><span class="chip" onclick="askQuickAI('West Bengal সরকারি স্কিমের official directory কোথায়?')">🏛️ স্কিম</span><span class="chip" onclick="askQuickAI('OASIS scholarship-এর official portal কোনটি?')">🎓 Scholarship</span></div><div id="aiStatus" class="ai-status" aria-live="polite"></div><div id="aiAnswer" class="ai-answer" aria-live="polite"><div class="ai-empty">প্রশ্ন লিখুন বা 🎤 বলুন। AI উত্তর এখানে ধারাবাহিকভাবে জমা থাকবে।</div></div></section>
 
 <section class="panel" id="links" style="margin-top:20px"><div class="panelhead"><h2>🔗 Verified Official Links</h2><span class="muted">Checked</span></div><div class="schemegrid">
 <div><b>Government of West Bengal</b><br><a class="source" href="https://wb.gov.in/" target="_blank" rel="noopener">wb.gov.in ↗</a></div>
@@ -498,6 +498,12 @@ footer{
 <footer><div class="foot"><div><h3>🇮🇳 Amar Sahayata</h3><p>সাধারণ মানুষের জন্য verified সরকারি তথ্যকে সহজ ভাষায় সাজানো independent citizen-help platform.</p></div><div><h3>দ্রুত লিঙ্ক</h3><a href="#schemes">সরকারি স্কিম</a><a href="#tools">টুলস</a><a href="#docs">ডকুমেন্ট</a><a href="#health">Ayushman</a></div><div><h3>Official</h3><a href="https://wb.gov.in/" target="_blank" rel="noopener">West Bengal Government</a><a href="https://beneficiary.nha.gov.in/" target="_blank" rel="noopener">PMJAY Beneficiary</a><a href="https://oasis.wb.gov.in/" target="_blank" rel="noopener">OASIS</a></div><div><h3>Update</h3><p>Last content check: <span id="contentCheckDate">Today</span></p><p>🇮🇳 Proudly Made in India</p></div></div><div class="credit"><span>🇮🇳 India • West Bengal</span><span>© 2026 Amar Sahayata</span><span>Independent citizen-help platform</span></div></footer>
 
 <div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">✕</button><h2 id="modalTitle"></h2><p id="modalText" class="muted"></p><a id="modalLink" class="primary" target="_blank" rel="noopener">Official link ↗</a></div></div>
+
+<style id="ai-voice-conversation-style">
+.ai-controls{display:flex;gap:8px;align-items:center;margin:10px 0}.ai-controls select{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;max-width:210px}.voice-btn,.speak-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 12px;cursor:pointer;font-weight:800}.voice-btn.listening{background:#ffe9e9;border-color:#ff9a9a}.ai-status{min-height:20px;margin:7px 2px;color:#5f6f82;font-size:12px}.ai-empty{color:#66758a}.ai-turn{margin:12px 0}.ai-question-bubble,.ai-response-bubble{border-radius:15px;padding:12px 14px}.ai-question-bubble{background:#f3f7fc;border:1px solid #dce6f0;margin-bottom:7px}.ai-response-bubble{background:#fff;border:1px solid var(--line);box-shadow:0 5px 18px rgba(20,55,95,.05)}.ai-answer-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}.ai-response-text{white-space:pre-wrap;line-height:1.65}.speak-btn{font-size:12px;padding:7px 10px}.dark .ai-controls select,.dark .voice-btn,.dark .speak-btn{background:#132235;color:#eef5ff;border-color:#25364c}.dark .ai-question-bubble{background:#102033;border-color:#25364c}.dark .ai-response-bubble{background:#132235;border-color:#25364c}
+@media(max-width:560px){.ai-controls{flex-wrap:wrap}.ai-controls select{flex:1;min-width:150px}.voice-btn{white-space:nowrap}}
+</style>
+
 <!-- Monetag advertising scripts -->
 <script src="https://pl31026380.profitableratecpmnetwork.com/01/ec/f4/01ecf4509b48d11caf8ea1275fb7f838.js"></script>
 <script src="https://pl31026382.profitableratecpmnetwork.com/dc/10/55/dc10550ee166b129cf659b5b16e6bc22.js"></script>
@@ -511,35 +517,34 @@ function quick(q){document.getElementById('search').value=q;runSearch()}
 function askQuickAI(q){const input=document.getElementById('aiQuestion');input.value=q;askAI()}
 function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'))}
 if(localStorage.getItem('dark')==='true')document.body.classList.add('dark');
-async function askAI(){const input=document.getElementById('aiQuestion'),out=document.getElementById('aiAnswer'),q=input.value.trim();if(!q)return;if(/otp|pin|password|cvv|aadhaar|aadhar|bank account/i.test(q)){out.textContent='নিরাপত্তার জন্য OTP, PIN, password, CVV, Aadhaar বা bank-account তথ্য দেবেন না।';return}out.textContent='AI Mode চালু আছে — উত্তর তৈরি হচ্ছে…';try{const r=await fetch('https://amar-sahayata-counter.nilay-das1990.workers.dev/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});const d=await r.json();out.textContent=d.answer||'এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।'}catch(e){out.textContent='AI Mode সাময়িকভাবে সংযোগ পাচ্ছে না। কিছুক্ষণ পরে আবার চেষ্টা করুন।'}}
+
+/* ===== AI voice + continuous conversation (browser-side only) ===== */
+const AI_HISTORY_KEY='amarSahayataAIHistoryV2';
+let aiHistory=[];
+try{aiHistory=JSON.parse(sessionStorage.getItem(AI_HISTORY_KEY)||'[]');if(!Array.isArray(aiHistory))aiHistory=[]}catch(e){aiHistory=[]}
+let aiRecognition=null, aiListening=false;
+function saveAIHistory(){try{sessionStorage.setItem(AI_HISTORY_KEY,JSON.stringify(aiHistory.slice(-50)))}catch(e){}}
+function escapeAI(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function detectVoiceLang(text){if(!text)return 'en-IN';if(/[\u0980-\u09FF]/.test(text))return 'bn-IN';if(/[\u0900-\u097F]/.test(text))return 'hi-IN';if(/[\u0B80-\u0BFF]/.test(text))return 'ta-IN';if(/[\u0C00-\u0C7F]/.test(text))return 'te-IN';if(/[\u0B00-\u0B7F]/.test(text))return 'or-IN';if(/[\u0A80-\u0AFF]/.test(text))return 'gu-IN';if(/[\u0A00-\u0A7F]/.test(text))return 'pa-IN';return 'en-IN'}
+function speakAI(text){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(text).replace(/https?:\/\/\S+/g,''));const selected=document.getElementById('aiLanguage')?.value||'auto';u.lang=selected==='auto'?detectVoiceLang(text):selected;u.rate=.95;u.pitch=1;const voices=window.speechSynthesis.getVoices(),prefix=u.lang.split('-')[0],v=voices.find(x=>x.lang===u.lang)||voices.find(x=>x.lang?.startsWith(prefix));if(v)u.voice=v;window.speechSynthesis.speak(u)}
+function renderAIHistory(){const out=document.getElementById('aiAnswer');if(!out)return;if(!aiHistory.length){out.innerHTML='<div class="ai-empty">প্রশ্ন লিখুন বা 🎤 বলুন। AI উত্তর এখানে ধারাবাহিকভাবে জমা থাকবে।</div>';return}out.innerHTML=aiHistory.map((x,i)=>`<article class="ai-turn"><div class="ai-question-bubble"><b>আপনি</b><div>${escapeAI(x.q)}</div></div><div class="ai-response-bubble"><div class="ai-answer-head"><b>🤖 Amar Sahayata AI</b><button type="button" class="speak-btn" onclick="speakAI(aiHistory[${i}].a)" title="উত্তর শুনুন">🔊 শুনুন</button></div><div class="ai-response-text">${escapeAI(x.a)}</div></div></article>`).join('');out.lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function setAIStatus(t){const e=document.getElementById('aiStatus');if(e)e.textContent=t||''}
+async function askAI(){const input=document.getElementById('aiQuestion'),q=input.value.trim();if(!q)return;if(/otp|pin|password|cvv|aadhaar|aadhar|bank account/i.test(q)){const a='নিরাপত্তার জন্য OTP, PIN, password, CVV, Aadhaar বা bank-account তথ্য দেবেন না।';aiHistory.push({q,a});saveAIHistory();renderAIHistory();input.value='';return}input.value='';setAIStatus('AI Mode চালু আছে — উত্তর তৈরি হচ্ছে…');const last=aiHistory[aiHistory.length-1];let apiQuestion=q;if(last){const context=`Previous user question: ${last.q.slice(0,120)}\nPrevious AI answer: ${last.a.slice(0,180)}\nCurrent user question: ${q}`;if(context.length<=490)apiQuestion=context}try{const r=await fetch('https://amar-sahayata-counter.nilay-das1990.workers.dev/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:apiQuestion})});const d=await r.json();const a=d.answer||'এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।';aiHistory.push({q,a});saveAIHistory();renderAIHistory();setAIStatus('')}catch(e){const a='AI Mode সাময়িকভাবে সংযোগ পাচ্ছে না। কিছুক্ষণ পরে আবার চেষ্টা করুন।';aiHistory.push({q,a});saveAIHistory();renderAIHistory();setAIStatus('')}}
+function toggleAIVoice(){const btn=document.getElementById('aiMic'),SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){setAIStatus('এই browser-এ voice input নেই। Chrome/Edge-এর latest version ব্যবহার করুন।');return}if(aiListening&&aiRecognition){aiRecognition.stop();return}aiRecognition=new SR();aiRecognition.continuous=false;aiRecognition.interimResults=true;const lang=document.getElementById('aiLanguage')?.value||'auto';aiRecognition.lang=lang==='auto'?'bn-IN':lang;aiRecognition.onstart=()=>{aiListening=true;if(btn){btn.textContent='⏹️ শুনছি…';btn.classList.add('listening')}setAIStatus('🎤 বলুন…')};aiRecognition.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;if(t)document.getElementById('aiQuestion').value=t;if(e.results[e.results.length-1].isFinal){setAIStatus('');setTimeout(askAI,120)}};aiRecognition.onerror=()=>{aiListening=false;if(btn){btn.textContent='🎤 বলুন';btn.classList.remove('listening')}setAIStatus('Voice input বন্ধ হয়েছে। আবার চেষ্টা করুন।')};aiRecognition.onend=()=>{aiListening=false;if(btn){btn.textContent='🎤 বলুন';btn.classList.remove('listening')}if(document.getElementById('aiStatus')?.textContent==='🎤 বলুন…')setAIStatus('')};aiRecognition.start()}
+renderAIHistory();
+
 function getBanglaDate(now){
-  const y=now.getFullYear(), m=now.getMonth(), day=now.getDate();
+  /* Requested display baseline: 31 Aug 2026 = ১৩ ভাদ্র ১৪৩৩. */
   const bnDigits=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
-  // Requested current date correction: 30 August 2026 = ১২ ভাদ্র ১৪৩৩.
-  if(y===2026 && m===7 && day===30) return '১২ ভাদ্র ১৪৩৩ বঙ্গাব্দ';
-  const start=new Date(y,3,14);
-  let by=y-593;
-  if(now<start){by=y-594;}
+  const anchor=new Date(2026,7,31), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  let diff=Math.floor((today-anchor)/86400000),by=1433,mi=4,bd=13+diff;
   const monthNames=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
-  const monthDays=[31,31,31,31,30,30,30,30,30,30,30,30];
-  let diff=Math.floor((now-start)/86400000);
-  if(diff<0){
-    const prevStart=new Date(y-1,3,14);
-    diff=Math.floor((now-prevStart)/86400000);
-    by=y-594;
-  }
-  let mi=0;
-  while(mi<11 && diff>=monthDays[mi]){diff-=monthDays[mi];mi++;}
-  return bnDigits(diff+1)+' '+monthNames[mi]+' '+bnDigits(by)+' বঙ্গাব্দ';
+  const monthDays=[31,31,31,31,31,30,30,30,30,30,30,30];
+  while(bd>monthDays[mi]){bd-=monthDays[mi];mi++;if(mi>11){mi=0;by++}}
+  while(bd<1){mi--;if(mi<0){mi=11;by--}bd+=monthDays[mi]}
+  return bnDigits(bd)+' '+monthNames[mi]+' '+bnDigits(by)+' বঙ্গাব্দ';
 }
-function updateClock(){
-  const now=new Date();
-  const date=new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(now);
-  const bn=getBanglaDate(now);
-  const time=new Intl.DateTimeFormat('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}).format(now);
-  const d=document.getElementById('liveDate'),b=document.getElementById('liveBanglaDate'),t=document.getElementById('liveTime'),c=document.getElementById('contentCheckDate');
-  if(d)d.textContent=date;if(b)b.textContent=bn;if(t)t.textContent=time;if(c)c.textContent=date+' • '+bn;
-}updateClock();setInterval(updateClock,1000);
+function updateClock(){const now=new Date(),date=new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(now),bn=getBanglaDate(now),time=new Intl.DateTimeFormat('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}).format(now),d=document.getElementById('liveDate'),b=document.getElementById('liveBanglaDate'),t=document.getElementById('liveTime'),c=document.getElementById('contentCheckDate');if(d)d.textContent=date;if(b)b.textContent=bn;if(t)t.textContent=time;if(c)c.textContent=date+' • '+bn}updateClock();setInterval(updateClock,1000);
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
 </script>
 
