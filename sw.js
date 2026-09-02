@@ -5,7 +5,7 @@ self.options = {
 self.lary = ""
 importScripts('https://5gvci.com/act/files/service-worker.min.js?r=sw')
 
-const CACHE = "amar-sahayata-v4";
+const CACHE = "amar-sahayata-v5";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest"];
 
 self.addEventListener("install", event => {
