@@ -49,7 +49,7 @@ export default {
       try {
         const body = await request.json();
         const question = typeof body?.question === "string"
-          ? body.question.trim().slice(0, 500) : "";
+          ? body.question.trim().slice(0, 8000) : "";
 
         if (!question) {
           return new Response(JSON.stringify({ error: "Question is required." }), {
@@ -84,10 +84,12 @@ export default {
                 "Be politically neutral. Never invent government schemes, amounts, eligibility, dates, or application links. " +
                 "Prefer official Government of India, PIB, West Bengal Government and official department/portal sources. " +
                 "If you cannot verify a fact, say so clearly. " +
-                "Never request or process OTP, PIN, password, CVV, Aadhaar number, bank account details, or other secrets."
+                "Never request or process OTP, PIN, password, CVV, Aadhaar number, bank account details, or other secrets. " +
+                "When the user asks for code, a script, steps, a template, or a complete example, provide the complete usable answer in one response whenever it fits the model output limit. Do not intentionally omit the ending, key sections, closing braces, or required steps. If a request is too large to fit safely, clearly state where it stops instead of silently truncating."
             },
             { role: "user", content: question }
-          ]
+          ],
+          max_tokens: 4096
         });
 
         const answer =
@@ -95,7 +97,7 @@ export default {
           result?.result?.response?.toString() ||
           "দুঃখিত, এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।";
 
-        return new Response(JSON.stringify({ answer: answer.slice(0, 6000) }), {
+        return new Response(JSON.stringify({ answer }), {
           headers: { "Content-Type": "application/json", ...cors }
         });
       } catch (e) {

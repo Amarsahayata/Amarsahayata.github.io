@@ -506,7 +506,7 @@ footer{
 <div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">✕</button><h2 id="modalTitle"></h2><p id="modalText" class="muted"></p><a id="modalLink" class="primary" target="_blank" rel="noopener">Official link ↗</a></div></div>
 
 <style id="ai-voice-conversation-style">
-.ai-controls{display:flex;gap:8px;align-items:center;margin:10px 0}.ai-controls select{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;max-width:210px}.voice-btn,.speak-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 12px;cursor:pointer;font-weight:800}.voice-btn.listening{background:#ffe9e9;border-color:#ff9a9a}.ai-status{min-height:20px;margin:7px 2px;color:#5f6f82;font-size:12px}.ai-empty{color:#66758a}.ai-turn{margin:12px 0}.ai-question-bubble,.ai-response-bubble{border-radius:15px;padding:12px 14px}.ai-question-bubble{background:#f3f7fc;border:1px solid #dce6f0;margin-bottom:7px}.ai-response-bubble{background:#fff;border:1px solid var(--line);box-shadow:0 5px 18px rgba(20,55,95,.05)}.ai-answer-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}.ai-response-text{white-space:pre-wrap;line-height:1.65}.speak-btn{font-size:12px;padding:7px 10px;display:inline-flex;align-items:center;gap:7px;min-width:58px;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}.speak-btn:active{transform:scale(.96)}.speaker-bars{display:inline-flex;align-items:flex-end;gap:2px;height:16px}.speaker-bars i{display:block;width:2px;height:6px;border-radius:2px;background:currentColor;opacity:.8}.speak-btn.speaking .speaker-bars i:nth-child(1){animation:soundbar .75s ease-in-out infinite}.speak-btn.speaking .speaker-bars i:nth-child(2){animation:soundbar .75s ease-in-out .12s infinite}.speak-btn.speaking .speaker-bars i:nth-child(3){animation:soundbar .75s ease-in-out .24s infinite}.speak-btn.paused .speaker-bars i{height:8px;animation:none}.speak-btn.paused .speaker-bars i:nth-child(2){height:12px}@keyframes soundbar{0%,100%{height:4px}50%{height:15px}}.dark .ai-controls select,.dark .voice-btn,.dark .speak-btn{background:#132235;color:#eef5ff;border-color:#25364c}.dark .ai-question-bubble{background:#102033;border-color:#25364c}.dark .ai-response-bubble{background:#132235;border-color:#25364c}
+.ai-controls{display:flex;gap:8px;align-items:center;margin:10px 0}.ai-controls select{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;max-width:210px}.voice-btn,.speak-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 12px;cursor:pointer;font-weight:800}.voice-btn.listening{background:#ffe9e9;border-color:#ff9a9a}.ai-status{min-height:20px;margin:7px 2px;color:#5f6f82;font-size:12px}.ai-empty{color:#66758a}.ai-turn{margin:12px 0}.ai-question-bubble,.ai-response-bubble{border-radius:15px;padding:12px 14px}.ai-question-bubble{background:#f3f7fc;border:1px solid #dce6f0;margin-bottom:7px}.ai-response-bubble{background:#fff;border:1px solid var(--line);box-shadow:0 5px 18px rgba(20,55,95,.05)}.ai-answer-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}.ai-response-text{white-space:pre-wrap;line-height:1.65}.speak-btn{font-size:12px;padding:7px 10px;display:inline-flex;align-items:center;gap:7px;min-width:58px;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}.speak-btn:active{transform:scale(.96)}.speaker-bars{display:inline-flex;align-items:flex-end;gap:2px;height:16px}.speaker-bars i{display:block;width:2px;height:6px;border-radius:2px;background:currentColor;opacity:.8}.speak-btn.speaking .speaker-bars i:nth-child(1){animation:soundbar .75s ease-in-out infinite}.speak-btn.speaking .speaker-bars i:nth-child(2){animation:soundbar .75s ease-in-out .12s infinite}.speak-btn.speaking .speaker-bars i:nth-child(3){animation:soundbar .75s ease-in-out .24s infinite}.speak-btn.paused .speaker-bars i{height:8px;animation:none}.speak-btn.paused .speaker-bars i:nth-child(2){height:12px}@keyframes soundbar{0%,100%{height:4px}50%{height:15px}}.copy-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:7px 10px;cursor:pointer;font-weight:800;font-size:12px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.copy-btn:active{transform:scale(.96)}.ai-answer-actions{display:flex;gap:7px;align-items:center}.dark .ai-controls select,.dark .voice-btn,.dark .speak-btn,.dark .copy-btn{background:#132235;color:#eef5ff;border-color:#25364c}.dark .ai-question-bubble{background:#102033;border-color:#25364c}.dark .ai-response-bubble{background:#132235;border-color:#25364c}
 @media(max-width:560px){.ai-controls{flex-wrap:wrap}.ai-controls select{flex:1;min-width:150px}.voice-btn{white-space:nowrap}}
 </style>
 
@@ -543,7 +543,8 @@ function stopAISpeech(){aiSpeechToken++;if('speechSynthesis'in window)window.spe
 function speakAIChunk(token){if(token!==aiSpeechToken||aiSpeechState!=='playing'||aiSpeechChunkIndex>=aiSpeechChunks.length)return;if(!('speechSynthesis'in window))return;const synth=window.speechSynthesis,text=aiSpeechChunks[aiSpeechChunkIndex],selected=document.getElementById('aiLanguage')?.value||'auto',lang=selected==='auto'?detectVoiceLang(text):selected,u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.98;u.pitch=1;u.volume=1;const v=chooseAIVoice(lang);if(v)u.voice=v;aiSpeechUtterance=u;u.onend=()=>{if(token!==aiSpeechToken||aiSpeechUtterance!==u)return;aiSpeechChunkIndex++;aiSpeechUtterance=null;if(aiSpeechChunkIndex<aiSpeechChunks.length&&aiSpeechState==='playing'){setTimeout(()=>speakAIChunk(token),20)}else if(aiSpeechChunkIndex>=aiSpeechChunks.length){aiSpeakingIndex=-1;aiSpeechState='idle';aiSpeechChunks=[];aiSpeechChunkIndex=0;updateSpeakerButtons()}};u.onerror=e=>{if(token!==aiSpeechToken||aiSpeechUtterance!==u)return;if(e&&e.error==='interrupted')return;aiSpeakingIndex=-1;aiSpeechUtterance=null;aiSpeechState='idle';aiSpeechChunks=[];aiSpeechChunkIndex=0;updateSpeakerButtons()};synth.speak(u)}
 function toggleAISpeech(index){if(!('speechSynthesis'in window)){setAIStatus('এই browser-এ voice output support নেই।');return}const synth=window.speechSynthesis;if(aiSpeakingIndex===index&&aiSpeechState==='playing'){aiSpeechState='paused';synth.pause();updateSpeakerButtons();return}if(aiSpeakingIndex===index&&aiSpeechState==='paused'){aiSpeechState='playing';synth.resume();updateSpeakerButtons();return}stopAISpeech();const chunks=splitSpeechText(aiHistory[index]?.a);if(!chunks.length)return;aiSpeechChunks=chunks;aiSpeechChunkIndex=0;aiSpeakingIndex=index;aiSpeechState='playing';const token=++aiSpeechToken;updateSpeakerButtons();speakAIChunk(token)}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&aiSpeechState==='paused'&&aiSpeakingIndex>=0)updateSpeakerButtons()});
-function renderAIHistory(){const out=document.getElementById('aiAnswer');if(!out)return;if(!aiHistory.length){out.innerHTML='<div class="ai-empty">প্রশ্ন লিখুন বা 🎤 বলুন। AI উত্তর এখানে ধারাবাহিকভাবে জমা থাকবে।</div>';return}out.innerHTML=aiHistory.map((x,i)=>`<article class="ai-turn"><div class="ai-question-bubble"><b>আপনি</b><div>${escapeAI(x.q)}</div></div><div class="ai-response-bubble"><div class="ai-answer-head"><b>🤖 Amar Sahayata AI</b><button type="button" class="speak-btn" data-index="${i}" onclick="toggleAISpeech(${i})" title="উত্তর শুনুন"><span class="speaker-bars"><i></i><i></i><i></i></span><span>🔊</span></button></div><div class="ai-response-text">${escapeAI(x.a)}</div></div></article>`).join('');updateSpeakerButtons();out.lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function renderAIHistory(){const out=document.getElementById('aiAnswer');if(!out)return;if(!aiHistory.length){out.innerHTML='<div class="ai-empty">প্রশ্ন লিখুন বা 🎤 বলুন। AI উত্তর এখানে ধারাবাহিকভাবে জমা থাকবে।</div>';return}out.innerHTML=aiHistory.map((x,i)=>`<article class="ai-turn"><div class="ai-question-bubble"><b>আপনি</b><div>${escapeAI(x.q)}</div></div><div class="ai-response-bubble"><div class="ai-answer-head"><b>🤖 Amar Sahayata AI</b><div class="ai-answer-actions"><button type="button" class="copy-btn" onclick="copyAIAnswer(${i},this)" title="উত্তর কপি করুন">📋 Copy</button><button type="button" class="speak-btn" data-index="${i}" onclick="toggleAISpeech(${i})" title="উত্তর শুনুন"><span class="speaker-bars"><i></i><i></i><i></i></span><span>🔊</span></button></div></div><div class="ai-response-text">${escapeAI(x.a)}</div></div></article>`).join('');updateSpeakerButtons();out.lastElementChild?.scrollIntoView({behavior:'smooth',block:'nearest'})}
+async function copyAIAnswer(i,btn){const text=aiHistory[i]?.a||'';if(!text)return;let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);ok=true}}catch(e){}if(!ok){try{const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');ta.remove()}catch(e){}}if(btn){const old=btn.textContent;btn.textContent=ok?'✅ Copied':'Copy failed';setTimeout(()=>{btn.textContent=old},1400)}}
 function setAIStatus(t){const e=document.getElementById('aiStatus');if(e)e.textContent=t||''}
 async function askAI(){const input=document.getElementById('aiQuestion'),q=input.value.trim();if(!q)return;stopAISpeech();if(/otp|pin|password|cvv|aadhaar|aadhar|bank account/i.test(q)){const a='নিরাপত্তার জন্য OTP, PIN, password, CVV, Aadhaar বা bank-account তথ্য দেবেন না।';aiHistory.push({q,a});saveAIHistory();renderAIHistory();input.value='';return}input.value='';setAIStatus('AI Mode চালু আছে — উত্তর তৈরি হচ্ছে…');const last=aiHistory[aiHistory.length-1];let apiQuestion=q;if(last){const context=`Previous user question: ${last.q.slice(0,120)}\nPrevious AI answer: ${last.a.slice(0,180)}\nCurrent user question: ${q}`;if(context.length<=490)apiQuestion=context}try{const r=await fetch('https://amar-sahayata-counter.nilay-das1990.workers.dev/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:apiQuestion})});const d=await r.json();const a=d.answer||'এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।';aiHistory.push({q,a});saveAIHistory();renderAIHistory();setAIStatus('')}catch(e){const a='AI Mode সাময়িকভাবে সংযোগ পাচ্ছে না। কিছুক্ষণ পরে আবার চেষ্টা করুন।';aiHistory.push({q,a});saveAIHistory();renderAIHistory();setAIStatus('')}}
 function toggleAIVoice(){const btn=document.getElementById('aiMic'),SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){setAIStatus('এই browser-এ voice input নেই। Chrome/Edge-এর latest version ব্যবহার করুন।');return}if(aiListening&&aiRecognition){aiRecognition.stop();return}aiRecognition=new SR();aiRecognition.continuous=false;aiRecognition.interimResults=true;const lang=document.getElementById('aiLanguage')?.value||'auto';aiRecognition.lang=lang==='auto'?'bn-IN':lang;aiRecognition.onstart=()=>{aiListening=true;if(btn){btn.textContent='⏹️ শুনছি…';btn.classList.add('listening')}setAIStatus('🎤 বলুন…')};aiRecognition.onresult=e=>{let t='';for(let i=e.resultIndex;i<e.results.length;i++)t+=e.results[i][0].transcript;if(t)document.getElementById('aiQuestion').value=t;if(e.results[e.results.length-1].isFinal){setAIStatus('');setTimeout(askAI,120)}};aiRecognition.onerror=()=>{aiListening=false;if(btn){btn.textContent='🎤 বলুন';btn.classList.remove('listening')}setAIStatus('Voice input বন্ধ হয়েছে। আবার চেষ্টা করুন।')};aiRecognition.onend=()=>{aiListening=false;if(btn){btn.textContent='🎤 বলুন';btn.classList.remove('listening')}if(document.getElementById('aiStatus')?.textContent==='🎤 বলুন…')setAIStatus('')};aiRecognition.start()}
@@ -743,5 +744,93 @@ $('rfShow').onclick=()=>{let m=$('rfSign').value;chosen=m?S.find(s=>s[0]===m):ge
 let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.type='button';b.innerHTML=s[2]+' '+s[1];b.onclick=()=>{chosen=s;$('rfSign').value=s[0];render()};row.appendChild(b)});render()})();
 </script>
 
+
+
+<style id="universal-icon-compat">
+/* Visual-only compatibility: replace emoji UI glyphs with inline SVG icons.
+   This prevents missing-font squares on desktop/mobile without changing layout/content. */
+.as-svg-icon{display:inline-flex;width:1.18em;height:1.18em;vertical-align:-.22em;align-items:center;justify-content:center;flex:0 0 auto;color:currentColor}
+.as-svg-icon svg{width:100%;height:100%;display:block;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cat .as-svg-icon,.scheme .as-svg-icon,.feature .as-svg-icon{font-size:1em;margin-bottom:2px}
+.navlinks .as-svg-icon{width:1.1em;height:1.1em;vertical-align:-.2em}
+.ai-btn .as-svg-icon,.search button .as-svg-icon{width:1.05em;height:1.05em}
+.contact-icon .as-svg-icon,.visitor-glow .as-svg-icon{width:1em;height:1em}
+.ai-response-actions .as-svg-icon{width:1.05em;height:1.05em}
+/* Use the existing CSS tricolour flag artwork instead of a platform emoji glyph. */
+.hero-card:after{content:""!important;width:250px!important;height:162px!important;border-radius:18px!important;background:linear-gradient(to bottom,#ff9933 0 33.333%,#fff 33.333% 66.666%,#138808 66.666% 100%)!important;box-shadow:0 25px 55px #174d8e22!important;transform:rotate(-7deg)!important;opacity:.95!important;display:block!important;position:relative!important;z-index:4!important;animation:flagBillow 4.2s ease-in-out infinite!important}
+@media(max-width:900px){.hero-card:after{width:230px!important;height:150px!important}}
+@media(max-width:560px){.hero-card:after{width:190px!important;height:124px!important}}
+</style>
+<script id="universal-icon-compat-js">
+(function(){
+  const ICONS={
+    '🏛️':['M3 10h18M5 10V21M9 10V21M15 10V21M19 10V21M3 21h18M4 7l8-4 8 4v3H4V7'],
+    '🧮':['M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM8 6h8M8 11h2M14 11h2M8 15h2M14 15h2M8 19h2M14 19h2'],
+    '📄':['M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM14 2v5h5M8 11h8M8 15h8M8 19h5'],
+    '💼':['M4 7h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2ZM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 12h20M10 12v3h4v-3'],
+    '🎓':['M3 10 12 5l9 5-9 5-9-5ZM6 12v5c3 2 9 2 12 0v-5M21 10v7'],
+    '❤️':['M20.8 8.6c0 5.4-8.8 10.2-8.8 10.2S3.2 14 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z'],
+    '🤖':['M8 8h8a4 4 0 0 1 4 4v6H4v-6a4 4 0 0 1 4-4ZM12 4v4M9 13h.01M15 13h.01M8 18v3M16 18v3M4 14H2M22 14h-2'],
+    '🔎':['M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16ZM21 21l-4.3-4.3'],
+    '📅':['M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2ZM7 2v4M17 2v4M3 9h18M7 13h3M14 13h3M7 17h3'],
+    '👩':['M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0M8 4c1-3 7-3 8 0'],
+    '🧑‍💼':['M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM3 21a6 6 0 0 1 12 0M16 8h5M18 6v4M16 15h5M16 19h5'],
+    '🏥':['M3 6h18v15H3V6ZM8 3h8v5H8V3ZM12 9v8M8 13h8'],
+    '🌾':['M12 21V4M12 10c-4-1-6-3-6-6 4 0 6 2 6 6ZM12 15c4-1 6-3 6-6-4 0-6 2-6 6M12 18c-3-1-5-3-5-5 3 0 5 2 5 5'],
+    '🧓':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0M4 7c1-2 3-3 5-3'],
+    '📚':['M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2V5ZM20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2V5ZM13 4h-2'],
+    '🪪':['M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2ZM7 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM11 10h7M11 14h5'],
+    '🔗':['M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1'],
+    '📁':['M3 6a2 2 0 0 1 2-2h6l2 2h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z'],
+    '📞':['M6 3h3l2 5-2 2a15 15 0 0 0 5 5l2-2 5 2v3a2 2 0 0 1-2 2C10 20 4 14 2 5a2 2 0 0 1 2-2h2'],
+    '📱':['M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM10 18h4'],
+    '📍':['M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12ZM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z'],
+    '👁️':['M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'],
+    '🔊':['M4 9v6h4l5 4V5L8 9H4ZM17 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12'],
+    '🎤':['M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3ZM6 11a6 6 0 0 0 12 0M12 17v4M8 21h8'],
+    '🌐':['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18'],
+    '💰':['M3 7h18v12H3V7ZM7 7V5h10v2M12 11a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z'],
+    '🎂':['M4 10h16v10H4V10ZM2 20h20M12 10V7M12 5v-2M7 10V8M17 10V8M4 14h16'],
+    '🏹':['M3 21 21 3M21 3h-7M21 3v7M6 18l3-3M12 12l3-3'],
+    '⛰️':['M3 20 10 8l4 6 3-4 4 10H3ZM10 8l2-4 2 4'],
+    '✨':['M12 3l1.4 5.6L19 10l-5.6 1.4L12 17l-1.4-5.6L5 10l5.6-1.4L12 3ZM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7L19 16'],
+    '⚕️':['M10 3h4v6h6v4h-6v6h-4v-6H4V9h6V3'],
+    '🗳️':['M4 5h16v12H4V5ZM8 9h8M8 13h5M7 21h10'],
+    '💳':['M3 5h18v14H3V5ZM3 9h18M7 15h5'],
+    '🍚':['M4 12h16M6 12a6 6 0 0 0 12 0M8 17h8M10 20h4'],
+    '🧾':['M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 8h6M9 12h6M9 16h4'],
+    '🏠':['M3 11 12 3l9 8v9H3v-9ZM9 20v-6h6v6'],
+    '🧑':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0'],
+    '💚':['M20.8 8.6c0 5.4-8.8 10.2-8.8 10.2S3.2 14 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z'],
+    '🔮':['M12 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM5 21h14M12 17v4'],
+    '🌱':['M12 21V10M12 13C8 13 5 10 5 6c4 0 7 2 7 7ZM12 16c4 0 7-3 7-7-4 0-7 2-7 7'],
+    '💨':['M3 8h12a3 3 0 1 0-3-3M3 12h17a3 3 0 1 1-3 3M3 16h9'],
+    '🌊':['M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0'],
+    '🦂':['M8 9c-3 0-4 2-4 4 0 2 2 3 4 3 3 0 4-2 4-4V7M12 7V4M12 4h4M16 4v3M16 7c4 0 4 3 3 5M19 12l2 2'],
+    '💧':['M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z'],
+    '🐟':['M3 12s4-6 10-6c4 0 7 3 8 6-1 3-4 6-8 6-6 0-10-6-10-6ZM13 10h.01M13 14h.01M21 12l-3-3v6l3-3Z'],
+    '⚖️':['M12 3v18M5 6h14M7 6l-3 7a4 4 0 0 0 8 0L9 6M17 6l-3 7a4 4 0 0 0 8 0l-3-7M7 21h10'],
+    '🏹':['M3 21 21 3M21 3h-7M21 3v7M6 18l3-3M12 12l3-3'],
+    '👤':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0'],
+    '⚙️':['M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM19 12l2-1-1-3-2 .2a7 7 0 0 0-1.4-1.4L17 4l-3-1-1 2a7 7 0 0 0-2 0L10 3 7 4l.2 2.8A7 7 0 0 0 5.8 8L3 7l-1 3 2 1a7 7 0 0 0 0 2l-2 1 1 3 2.8-.2a7 7 0 0 0 1.4 1.4L7 20l3 1 1-2a7 7 0 0 0 2 0l1 2 3-1-.2-2.8a7 7 0 0 0 1.4-1.4L20 17l1-3-2-1a7 7 0 0 0 0-1Z']
+  };
+  const keys=Object.keys(ICONS).sort((a,b)=>b.length-a.length);
+  const rx=new RegExp('('+keys.map(k=>k.replace(/[.*+?^${}()|[\\]\\]/g,'\\$&')).join('|')+')','g');
+  function icon(key){
+    const span=document.createElement('span');span.className='as-svg-icon';span.setAttribute('aria-hidden','true');
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',ICONS[key][0]);svg.appendChild(path);span.appendChild(svg);return span;
+  }
+  function walk(root){
+    const nodes=[];const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){
+      const p=n.parentElement;if(!p||/^(SCRIPT|STYLE|TEXTAREA|OPTION)$/i.test(p.tagName))return NodeFilter.FILTER_REJECT;
+      return rx.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+    }});
+    let n;while(n=w.nextNode())nodes.push(n);
+    nodes.forEach(n=>{rx.lastIndex=0;const parts=n.nodeValue.split(rx);if(parts.length<2)return;const frag=document.createDocumentFragment();parts.forEach(part=>{if(ICONS[part])frag.appendChild(icon(part));else if(part)frag.appendChild(document.createTextNode(part));});n.parentNode.replaceChild(frag,n);});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>walk(document.body));else walk(document.body);
+})();
+</script>
 
 </body></html>
