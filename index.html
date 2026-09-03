@@ -700,6 +700,135 @@ footer{
 }
 </style>
 
+
+<style id="design-polish-v8">
+/* ==========================================================
+   Amar Sahayata — Design Polish v8
+   Visual-only layer: tricolour flag, colourful animated icons,
+   premium responsive finish. No functionality is changed.
+   ========================================================== */
+:root{
+  --as-saffron:#ff9933;
+  --as-green:#138808;
+  --as-navy:#000080;
+  --as-blue:#1261c9;
+  --as-ink:#082b55;
+}
+
+/* Hero title: keep the original wording and add an Indian-tricolour heart. */
+.tricolor-heart{
+  display:inline-block;
+  font-family:Arial,sans-serif;
+  font-size:.92em;
+  line-height:1;
+  background:linear-gradient(160deg,var(--as-saffron) 0 34%,var(--as-navy) 34% 67%,var(--as-green) 67% 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 5px 9px rgba(0,0,128,.15));
+  animation:asHeartBeat 2.1s ease-in-out infinite;
+  vertical-align:-.04em;
+}
+@keyframes asHeartBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.07)}55%{transform:scale(1)}}
+
+/* Make every existing SVG icon colourful without changing its meaning/content. */
+.cat .as-svg-icon,.scheme .as-svg-icon,.feature .as-svg-icon,.tool .as-svg-icon{
+  width:1.32em;height:1.32em;
+  margin-bottom:4px;
+  transition:transform .35s ease,filter .35s ease;
+}
+.cat .as-svg-icon svg,.scheme .as-svg-icon svg,.feature .as-svg-icon svg,.tool .as-svg-icon svg{
+  stroke:currentColor;
+  filter:drop-shadow(0 3px 5px rgba(6,43,89,.10));
+}
+.cat:nth-child(4n+1) .as-svg-icon{color:var(--as-saffron)}
+.cat:nth-child(4n+2) .as-svg-icon{color:var(--as-blue)}
+.cat:nth-child(4n+3) .as-svg-icon{color:var(--as-green)}
+.cat:nth-child(4n) .as-svg-icon{color:#7b3fc6}
+.scheme:nth-child(4n+1) .as-svg-icon{color:var(--as-saffron)}
+.scheme:nth-child(4n+2) .as-svg-icon{color:var(--as-blue)}
+.scheme:nth-child(4n+3) .as-svg-icon{color:var(--as-green)}
+.scheme:nth-child(4n) .as-svg-icon{color:#d24b78}
+.feature:nth-child(4n+1) .as-svg-icon,.tool:nth-child(4n+1) .as-svg-icon{color:var(--as-saffron)}
+.feature:nth-child(4n+2) .as-svg-icon,.tool:nth-child(4n+2) .as-svg-icon{color:var(--as-blue)}
+.feature:nth-child(4n+3) .as-svg-icon,.tool:nth-child(4n+3) .as-svg-icon{color:var(--as-green)}
+.feature:nth-child(4n) .as-svg-icon,.tool:nth-child(4n) .as-svg-icon{color:#7b3fc6}
+.cat:hover .as-svg-icon,.scheme:hover .as-svg-icon,.feature:hover .as-svg-icon,.tool:hover .as-svg-icon{
+  transform:translateY(-3px) scale(1.10) rotate(-3deg);
+  filter:drop-shadow(0 6px 9px rgba(6,43,89,.16));
+}
+
+/* Navigation icons: small, crisp and colourful on every platform. */
+.navlinks a:nth-child(4n+1) .as-svg-icon{color:var(--as-saffron)}
+.navlinks a:nth-child(4n+2) .as-svg-icon{color:var(--as-blue)}
+.navlinks a:nth-child(4n+3) .as-svg-icon{color:var(--as-green)}
+.navlinks a:nth-child(4n) .as-svg-icon{color:#7b3fc6}
+.navlinks a:hover .as-svg-icon{transform:translateY(-1px) scale(1.08)}
+
+/* AI/search controls retain the existing layout, with clearer icon contrast. */
+.ai-btn .as-svg-icon{color:#fff!important}
+.search button .as-svg-icon{color:#fff!important}
+
+/* A more recognisable Indian flag: clean 3:2 field + Chakra overlay. */
+.hero-card:after{
+  width:min(360px,68%) !important;
+  aspect-ratio:3/2 !important;
+  border-radius:8px 13px 13px 8px !important;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.0) 0 6%,rgba(255,255,255,.26) 9%,rgba(255,255,255,0) 18%),
+    linear-gradient(to bottom,var(--as-saffron) 0 33.333%,#fff 33.333% 66.666%,var(--as-green) 66.666% 100%) !important;
+  border:1px solid rgba(0,0,128,.10);
+  box-shadow:0 28px 58px rgba(0,0,128,.18),0 8px 18px rgba(19,136,8,.10),inset 0 1px 0 rgba(255,255,255,.70) !important;
+}
+.hero-card .chakra{
+  width:68px !important;height:68px !important;
+  margin-left:-34px !important;margin-top:-34px !important;
+  border:2.4px solid var(--as-navy) !important;
+  background:
+    radial-gradient(circle at center,var(--as-navy) 0 3px,transparent 3.6px),
+    repeating-conic-gradient(from -7.5deg,var(--as-navy) 0 1.8deg,transparent 1.8deg 15deg),
+    radial-gradient(circle,transparent 0 43%,var(--as-navy) 43.5% 47%,transparent 47.5%) !important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.35),0 2px 8px rgba(0,0,128,.12) !important;
+}
+.hero-card .chakra:after{
+  inset:9px !important;
+  border:1px solid rgba(0,0,128,.72) !important;
+  background:transparent !important;
+}
+
+/* Professional tricolour atmosphere — deliberately subtle, not overpowering. */
+.hero,.hero-card,main{
+  isolation:isolate;
+}
+.hero-card{
+  background:
+    radial-gradient(250px 150px at 15% 12%,rgba(255,153,51,.22),transparent 72%),
+    radial-gradient(270px 170px at 88% 88%,rgba(19,136,8,.20),transparent 72%),
+    linear-gradient(145deg,#edf5ff 0%,#fff 48%,#eef9f1 100%) !important;
+}
+.panel,.feature,.cat,.scheme,.tool,.banner,.contact-card,.visitor-counter{
+  transition:transform .30s ease,box-shadow .30s ease,border-color .30s ease !important;
+}
+
+/* Mobile: prevent oversized flag/title/icons and keep touch targets comfortable. */
+@media(max-width:900px){
+  .hero-card:after{width:min(330px,72%) !important}
+  .hero-card .chakra{width:62px !important;height:62px !important;margin-left:-31px !important;margin-top:-31px !important}
+}
+@media(max-width:560px){
+  .hero h1{font-size:clamp(33px,9.5vw,46px) !important}
+  .hero-card:after{width:min(245px,76%) !important}
+  .hero-card .chakra{width:52px !important;height:52px !important;margin-left:-26px !important;margin-top:-26px !important}
+  .hero-card .chakra:after{inset:7px !important}
+  .cat .as-svg-icon,.scheme .as-svg-icon,.feature .as-svg-icon,.tool .as-svg-icon{width:1.22em;height:1.22em}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .tricolor-heart,.cat .as-svg-icon,.scheme .as-svg-icon,.feature .as-svg-icon,.tool .as-svg-icon{animation:none !important;transition:none !important}
+}
+</style>
+
 </head>
 <body>
 <amp-auto-ads type="adsense"
@@ -714,7 +843,7 @@ footer{
 
 <section class="hero"><div class="hero-in"><div>
 <span class="eyebrow">🇮🇳 তথ্য যাচাইকে প্রথম অগ্রাধিকার</span>
-<h1>সহায়তা আপনার,<br><em>সাথে আমরা ❤️</em></h1>
+<h1>সহায়তা আপনার,<br><em>সাথে আমরা <span class="tricolor-heart" aria-label="ভালোবাসা">♥</span></em></h1>
 <p>সরকারি স্কিম, স্বাস্থ্য, স্কলারশিপ, চাকরি, ডকুমেন্ট ও দরকারি সরকারি লিঙ্ক—এক জায়গায়, সহজ ভাষায়। Broken/dead links বাদ দিয়ে verified official sources রাখা হয়েছে।</p>
 <div class="search"><input id="search" placeholder="স্কিম, সার্টিফিকেট, চাকরি বা Ayushman খুঁজুন…" onkeydown="if(event.key==='Enter')runSearch()"><button onclick="runSearch()">🔎 খুঁজুন</button></div>
 <div class="chips"><span class="chip" onclick="quick('Ayushman')">Ayushman Card</span><span class="chip" onclick="quick('scholarship')">Scholarship</span><span class="chip" onclick="quick('Krishak')">Krishak Bandhu</span><span class="chip" onclick="quick('certificate')">Certificate</span></div>
