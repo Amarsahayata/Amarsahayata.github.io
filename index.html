@@ -945,7 +945,7 @@ if(localStorage.getItem('dark')==='true')document.body.classList.add('dark');
 
 /* ===== AI voice + continuous conversation (browser-side only) ===== */
 const AI_HISTORY_KEY='amarSahayataAIHistoryV2';
-let aiHistory=[];
+let aiHistory=[];window.__asPushAI=(q,a)=>{aiHistory.push({q,a});saveAIHistory();renderAIHistory()};window.__asGetAIHistory=()=>aiHistory;
 try{aiHistory=JSON.parse(sessionStorage.getItem(AI_HISTORY_KEY)||'[]');if(!Array.isArray(aiHistory))aiHistory=[]}catch(e){aiHistory=[]}
 let aiRecognition=null, aiListening=false, aiSpeakingIndex=-1, aiSpeechUtterance=null, aiSpeechState='idle';
 let aiSpeechChunks=[], aiSpeechChunkIndex=0, aiSpeechToken=0, aiVoiceCache=[];
@@ -1249,6 +1249,100 @@ let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.typ
     nodes.forEach(n=>{rx.lastIndex=0;const parts=n.nodeValue.split(rx);if(parts.length<2)return;const frag=document.createDocumentFragment();parts.forEach(part=>{if(ICONS[part])frag.appendChild(icon(part));else if(part)frag.appendChild(document.createTextNode(part));});n.parentNode.replaceChild(frag,n);});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>walk(document.body));else walk(document.body);
+})();
+</script>
+
+
+<style id="as-v9-multimodal-style">
+.as-ai-tools{margin-top:12px;padding:14px;border:1px solid rgba(26,69,112,.12);border-radius:18px;background:rgba(255,255,255,.72);box-shadow:0 10px 30px rgba(20,60,110,.06)}
+.as-ai-tool-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:900;color:#12345a;margin-bottom:10px}
+.as-ai-tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.as-ai-tool{border:1px solid rgba(26,69,112,.13);background:#fff;border-radius:13px;padding:10px 8px;cursor:pointer;font-weight:800;font-size:12px;transition:.2s;min-height:44px}
+.as-ai-tool:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(16,65,120,.11)}
+.as-ai-tool.active{outline:2px solid rgba(8,119,69,.28);background:linear-gradient(135deg,#fff8ee,#f1fff7)}
+.as-ai-file{display:none}
+.as-ai-attachments{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.as-ai-attachment{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f7fafc;border:1px solid #d9e4ee;border-radius:12px;font-size:12px;font-weight:700}
+.as-ai-attachment img{width:42px;height:42px;object-fit:cover;border-radius:9px}
+.as-ai-remove{border:0;background:transparent;cursor:pointer;font-size:16px}
+.as-ai-modal{position:fixed;inset:0;background:rgba(4,18,35,.65);backdrop-filter:blur(5px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+.as-ai-modal.show{display:flex}.as-ai-modal-box{width:min(720px,100%);background:#fff;border-radius:22px;padding:16px;box-shadow:0 30px 90px rgba(0,0,0,.3)}
+.as-ai-modal-head{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:12px}.as-ai-close{border:0;background:#edf3f8;border-radius:10px;padding:8px 11px;cursor:pointer}
+#asCameraVideo{width:100%;max-height:62vh;object-fit:contain;background:#071522;border-radius:16px}.as-camera-actions{display:flex;gap:10px;margin-top:12px}.as-camera-actions button{flex:1}
+.as-ai-result{margin-top:12px;padding:12px;border-radius:14px;background:#f6fafc;border:1px solid #dce7ef;font-size:13px;line-height:1.55}
+.as-ai-note{font-size:11px;color:#60748b;margin-top:8px}
+@media(max-width:760px){.as-ai-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.as-ai-tools{padding:11px}.as-ai-tool{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.as-ai-tool{transition:none}.as-ai-tool:hover{transform:none}}
+</style>
+
+<section class="as-ai-tools" id="asAiTools">
+  <div class="as-ai-tool-title"><span>✨ AI Studio — ছবি, ফাইল ও আরও কিছু</span><span class="verified">Multimodal</span></div>
+  <div class="as-ai-tool-grid">
+    <button type="button" class="as-ai-tool" onclick="AS.pickPhoto()">🖼️ Photo</button>
+    <button type="button" class="as-ai-tool" onclick="AS.openCamera()">📷 Camera</button>
+    <button type="button" class="as-ai-tool" onclick="AS.pickFile()">📎 Files</button>
+    <button type="button" class="as-ai-tool" onclick="AS.createImage()">🎨 Create image</button>
+    <button type="button" class="as-ai-tool" onclick="AS.createVideo()">🎬 Short video</button>
+    <button type="button" class="as-ai-tool" id="asThinking" onclick="AS.toggleThinking()">🧠 Thinking: OFF</button>
+    <button type="button" class="as-ai-tool" id="asWebSearch" onclick="AS.toggleWeb()">🌐 Web search: OFF</button>
+    <button type="button" class="as-ai-tool" onclick="AS.clearAttachment()">🗑️ Clear</button>
+  </div>
+  <input class="as-ai-file" id="asPhotoInput" type="file" accept="image/*" capture="environment">
+  <input class="as-ai-file" id="asFileInput" type="file" accept="image/*,.pdf,.txt,.md,.csv,.json,.html,.htm,.xml,.docx,.xlsx,.xls,.xlsm,.xlsb,.ods,.odt,.numbers">
+  <div id="asAttachments" class="as-ai-attachments"></div>
+  <div class="as-ai-note">ছবি/ফাইল দিলে prompt লিখে AI-কে বলুন কী করতে হবে। Camera button-টি supported mobile browser-এ সরাসরি camera খুলতে পারে।</div>
+</section>
+
+<div class="as-ai-modal" id="asCameraModal" aria-hidden="true">
+  <div class="as-ai-modal-box">
+    <div class="as-ai-modal-head"><span>📷 Camera</span><button class="as-ai-close" type="button" onclick="AS.closeCamera()">✕</button></div>
+    <video id="asCameraVideo" autoplay playsinline></video>
+    <div class="as-camera-actions"><button class="primary" type="button" onclick="AS.captureCamera()">📸 Take photo</button><button class="navbtn" type="button" onclick="AS.closeCamera()">Cancel</button></div>
+    <div id="asCameraStatus" class="as-ai-result" style="display:none"></div>
+  </div>
+</div>
+
+<script id="as-v9-multimodal-js">
+(function(){
+  const API='https://amar-sahayata-counter.nilay-das1990.workers.dev';
+  let attachment=null, thinking=false, web=false, stream=null;
+  const $=id=>document.getElementById(id);
+  const status=t=>{const e=$('aiStatus');if(e)e.textContent=t||''};
+  function render(){const box=$('asAttachments');if(!box)return;box.innerHTML='';if(!attachment)return;const wrap=document.createElement('div');wrap.className='as-ai-attachment';if(attachment.kind==='image'){const im=document.createElement('img');im.src=attachment.data;wrap.appendChild(im)}const name=document.createElement('span');name.textContent=attachment.name||'Attachment';wrap.appendChild(name);const x=document.createElement('button');x.className='as-ai-remove';x.type='button';x.textContent='✕';x.onclick=clear;wrap.appendChild(x);box.appendChild(wrap)}
+  function clear(){attachment=null;render();const p=$('asPhotoInput'),f=$('asFileInput');if(p)p.value='';if(f)f.value=''}
+  function pickPhoto(){$('asPhotoInput')?.click()}
+  function pickFile(){$('asFileInput')?.click()}
+  function fileToDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
+  async function handleImage(file){if(!file)return;if(file.size>12*1024*1024){status('ছবিটি 12 MB-এর মধ্যে দিন।');return}attachment={kind:'image',name:file.name||'Photo',data:await fileToDataURL(file),mime:file.type};render();status('ছবি যোগ হয়েছে — prompt লিখুন।')}
+  async function handleFile(file){if(!file)return;if(file.size>12*1024*1024){status('ফাইলটি 12 MB-এর মধ্যে দিন।');return}if(file.type.startsWith('image/'))return handleImage(file);attachment={kind:'file',name:file.name,data:file,mime:file.type};render();status('ফাইল যোগ হয়েছে — prompt লিখুন।')}
+  async function openCamera(){const modal=$('asCameraModal');if(!modal)return;modal.classList.add('show');modal.setAttribute('aria-hidden','false');const video=$('asCameraVideo');try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});video.srcObject=stream}catch(e){if(modal)modal.classList.remove('show');const p=$('asPhotoInput');if(p){p.setAttribute('capture','environment');p.click()}status('Camera access পাওয়া যায়নি। Photo upload ব্যবহার করুন।')}}
+  function captureCamera(){const video=$('asCameraVideo');if(!video||!video.videoWidth){status('Camera প্রস্তুত হয়নি। আবার চেষ্টা করুন।');return}const c=document.createElement('canvas');const max=1600;const scale=Math.min(1,max/video.videoWidth);c.width=Math.round(video.videoWidth*scale);c.height=Math.round(video.videoHeight*scale);c.getContext('2d').drawImage(video,0,0,c.width,c.height);c.toBlob(async b=>{if(b){attachment={kind:'image',name:'camera-photo.jpg',data:await fileToDataURL(b),mime:'image/jpeg'};render();closeCamera();status('Camera photo যোগ হয়েছে — prompt লিখুন।')}},'image/jpeg',.88)}
+  function closeCamera(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}const m=$('asCameraModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}
+  function toggleThinking(){thinking=!thinking;const b=$('asThinking');if(b){b.textContent='🧠 Thinking: '+(thinking?'ON':'OFF');b.classList.toggle('active',thinking)}}
+  function toggleWeb(){web=!web;const b=$('asWebSearch');if(b){b.textContent='🌐 Web search: '+(web?'ON':'OFF');b.classList.toggle('active',web)}if(web)status('Web search চালু — এর জন্য Cloudflare AI Search/AI Gateway configuration প্রয়োজন।')}
+  async function postJSON(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Request failed');return d}
+  function pushAnswer(q,a){if(typeof window.__asPushAI==='function'){window.__asPushAI(q,a)}else if($('aiAnswer'))$('aiAnswer').textContent=a}
+  async function multimodalAsk(q){
+    if(!attachment)return false;
+    status('AI ছবি/ফাইল বিশ্লেষণ করছে…');
+    try{
+      let d;
+      if(attachment.kind==='image'){
+        d=await postJSON('/api/vision',{question:q,image:attachment.data,thinking});
+      }else{
+        const fd=new FormData();fd.append('file',attachment.data,attachment.name);fd.append('question',q);fd.append('thinking',thinking?'1':'0');
+        const r=await fetch(API+'/api/file',{method:'POST',body:fd});d=await r.json();if(!r.ok)throw new Error(d.error||'File request failed')
+      }
+      const a=d.answer||d.text||'AI কোনো readable answer দেয়নি।';pushAnswer(q,a);status('');return true;
+    }catch(e){pushAnswer(q,'AI multimodal request ব্যর্থ হয়েছে: '+(e.message||'unknown error'));status('');return true}
+  }
+  async function createImage(){const input=$('aiQuestion');const q=(input?.value||'').trim();if(!q){status('Create image-এর জন্য আগে prompt লিখুন।');input?.focus();return}status('Image তৈরি হচ্ছে…');try{const d=await postJSON('/api/image',{prompt:q});if(d.dataURI){const a='AI image created successfully.';pushAnswer(q,a);const img=document.createElement('img');img.src=d.dataURI;img.alt='AI generated image';img.style.cssText='max-width:100%;border-radius:14px;margin-top:10px';$('aiAnswer')?.appendChild(img)}else pushAnswer(q,d.answer||'Image generation-এর উত্তর পাওয়া যায়নি।')}catch(e){pushAnswer(q,'Image generation এখন available নয়: '+(e.message||'setup required'));}status('')}
+  async function createVideo(){const input=$('aiQuestion');const q=(input?.value||'').trim();if(!q){status('Short video-এর জন্য আগে prompt লিখুন।');input?.focus();return}status('Short video request পাঠানো হচ্ছে…');try{const d=await postJSON('/api/video',{prompt:q,image:attachment?.kind==='image'?attachment.data:null});pushAnswer(q,d.answer||'Short video created successfully.');if(d.video){const v=document.createElement('video');v.controls=true;v.playsInline=true;v.src=d.video;v.style.cssText='width:100%;border-radius:14px;margin-top:10px';$('aiAnswer')?.appendChild(v)}}catch(e){pushAnswer(q,'Short video feature-এর জন্য একটি video-generation provider/AI Gateway configuration প্রয়োজন।')}status('')}
+  const oldAsk=window.askAI;
+  window.askAI=async function(){const input=$('aiQuestion');const q=(input?.value||'').trim();if(!q)return;if(attachment){if(input)input.value='';const ok=await multimodalAsk(q);if(ok)return}if(web){if(input)input.value='';status('Web search চলছে…');try{const d=await postJSON('/api/search',{question:q});pushAnswer(q,d.answer||'Search result পাওয়া যায়নি।')}catch(e){pushAnswer(q,'Web search চালাতে Cloudflare AI Search binding configure করতে হবে।')}status('');return}if(thinking&&input){input.value=q+'\n\nPlease use a reasoning-focused answer: give a concise plan/derivation, but do not reveal hidden chain-of-thought.'}return oldAsk?oldAsk():undefined}
+  $('asPhotoInput')?.addEventListener('change',e=>handleImage(e.target.files?.[0]));
+  $('asFileInput')?.addEventListener('change',e=>handleFile(e.target.files?.[0]));
+  window.AS={pickPhoto,pickFile,openCamera,captureCamera,closeCamera,clearAttachment:clear,toggleThinking,toggleWeb,createImage,createVideo};
 })();
 </script>
 

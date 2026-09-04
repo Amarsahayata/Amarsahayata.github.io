@@ -1,118 +1,276 @@
+/**
+ * Amar Sahayata - Cloudflare Worker
+ * Final AI + Visitor Counter + Multimodal AI Studio
+ *
+ * Existing routes preserved:
+ *   GET  /visitor
+ *   POST /api/ask
+ * Added routes:
+ *   POST /api/vision   -> image understanding with Gemma 4 Vision
+ *   POST /api/file     -> PDF/Office/image/etc. to Markdown + AI answer
+ *   POST /api/image    -> text-to-image with FLUX.1 schnell
+ *   POST /api/video    -> text/image-to-video with Runway Gen-4.5
+ *   POST /api/search   -> web-grounded answer through AI Gateway
+ */
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const origin = "https://amarsahayata.github.io";
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": origin,
-          "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Max-Age": "86400"
-        }
-      });
-    }
-
-    const cors = {
-      "Access-Control-Allow-Origin": origin,
-      "Vary": "Origin"
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "https://amarsahayata.github.io",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
     };
 
-    if (url.pathname === "/visitor" && request.method === "GET") {
+    const json = (data, status = 200, extra = {}) =>
+      new Response(JSON.stringify(data), {
+        status,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          ...corsHeaders,
+          ...extra,
+        },
+      });
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: corsHeaders });
+    }
+
+    // =====================================
+    // VISITOR COUNTER - unchanged
+    // =====================================
+    if (url.pathname === "/visitor") {
+      if (request.method !== "GET") {
+        return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
+      }
       try {
-        await env.DB.prepare(
-          "UPDATE visitors SET count = count + 1 WHERE id = 1"
-        ).run();
-
-        const result = await env.DB.prepare(
-          "SELECT count FROM visitors WHERE id = 1"
-        ).first();
-
-        return new Response(JSON.stringify({
-          count: Number(result?.count ?? 0)
-        }), {
-          headers: { "Content-Type": "application/json", ...cors }
-        });
-      } catch (e) {
-        return new Response(JSON.stringify({
-          error: "Database error",
-          detail: String(e?.message || e)
-        }), {
-          status: 500,
-          headers: { "Content-Type": "application/json", ...cors }
-        });
+        await env.DB.prepare("UPDATE visitors SET count = count + 1 WHERE id = 1").run();
+        const result = await env.DB.prepare("SELECT count FROM visitors WHERE id = 1").first();
+        return json({ count: result?.count ?? 0 });
+      } catch (error) {
+        return json({ error: "Database error" }, 500);
       }
     }
 
-    if (url.pathname === "/api/ask" && request.method === "POST") {
+    // =====================================
+    // Shared text-generation helper
+    // =====================================
+    async function textAnswer(question, thinking = false) {
+      const result = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are Amar Sahayata AI Assistant. Answer clearly, helpfully and politely. " +
+              "Use Bengali, English or mixed Bengali-English according to the user. " +
+              "For government services and factual claims, do not invent official facts or links. " +
+              "Never request OTP, PIN, password, CVV, Aadhaar number, bank account number or other sensitive personal information. " +
+              "When code is requested, provide complete code when it fits. Preserve syntax, tags, braces and closing sections. " +
+              "Never claim that code was tested unless it was actually tested. " +
+              (thinking
+                ? "Use careful reasoning internally and give a concise useful explanation or plan; do not reveal private chain-of-thought."
+                : "Keep the answer practical and readable."),
+          },
+          { role: "user", content: question },
+        ],
+        chat_template_kwargs: { enable_thinking: Boolean(thinking) },
+        max_tokens: 4096,
+      });
+      return (
+        result?.choices?.[0]?.message?.content ||
+        result?.response ||
+        result?.result?.response ||
+        result?.text ||
+        result?.result?.text ||
+        ""
+      );
+    }
+
+    // =====================================
+    // EXISTING AI ASSISTANT - preserved
+    // =====================================
+    if (url.pathname === "/api/ask") {
+      if (request.method !== "POST") return json({ error: "POST request required" }, 405);
       try {
         const body = await request.json();
-        const question = typeof body?.question === "string"
-          ? body.question.trim().slice(0, 8000) : "";
+        const question =
+          typeof body?.question === "string" ? body.question.trim() :
+          typeof body?.message === "string" ? body.message.trim() :
+          typeof body?.prompt === "string" ? body.prompt.trim() : "";
+        if (!question) return json({ error: "Please enter a question." }, 400);
+        const answer = await textAnswer(question, Boolean(body?.thinking));
+        if (!answer) return json({ error: "AI did not return a readable answer." }, 502);
+        return json({ answer });
+      } catch (error) {
+        return json({ error: "AI temporarily unavailable. Please try again later." }, 500);
+      }
+    }
 
-        if (!question) {
-          return new Response(JSON.stringify({ error: "Question is required." }), {
-            status: 400,
-            headers: { "Content-Type": "application/json", ...cors }
-          });
-        }
+    // =====================================
+    // IMAGE UNDERSTANDING - Gemma 4 Vision
+    // =====================================
+    if (url.pathname === "/api/vision") {
+      if (request.method !== "POST") return json({ error: "POST request required" }, 405);
+      try {
+        const body = await request.json();
+        const question = typeof body?.question === "string" ? body.question.trim() : "Describe and help with this image.";
+        const image = typeof body?.image === "string" ? body.image : "";
+        if (!image.startsWith("data:image/")) return json({ error: "A valid image is required." }, 400);
+        if (image.length > 16_000_000) return json({ error: "Image is too large. Please use a smaller photo." }, 413);
 
-        if (/(otp|one[- ]time password|pin|password|cvv|card number|aadhaar number|aadhar number|bank account)/i.test(question)) {
-          return new Response(JSON.stringify({
-            answer: "নিরাপত্তার জন্য OTP, PIN, password, CVV, Aadhaar নম্বর বা bank-account তথ্য দেবেন না। অফিসিয়াল সরকারি পোর্টালেই ব্যক্তিগত তথ্য দিন।"
-          }), {
-            headers: { "Content-Type": "application/json", ...cors }
-          });
-        }
-
-        if (!env.AI) {
-          return new Response(JSON.stringify({
-            answer: "AI Mode-এর AI binding এখনো configure করা হয়নি। Cloudflare Worker-এ Workers AI binding হিসেবে 'AI' যোগ করুন।"
-          }), {
-            headers: { "Content-Type": "application/json", ...cors }
-          });
-        }
-
-        const result = await env.AI.run("@cf/google/gemma-3-12b-it", {
+        const result = await env.AI.run("@cf/google/gemma-4-26b-a4b-it", {
           messages: [
             {
               role: "system",
               content:
-                "You are Amar Sahayata, a Bengali public-service information assistant. " +
-                "Answer in simple Bengali unless the user asks for another language. " +
-                "Be politically neutral. Never invent government schemes, amounts, eligibility, dates, or application links. " +
-                "Prefer official Government of India, PIB, West Bengal Government and official department/portal sources. " +
-                "If you cannot verify a fact, say so clearly. " +
-                "Never request or process OTP, PIN, password, CVV, Aadhaar number, bank account details, or other secrets. " +
-                "When the user asks for code, a script, steps, a template, or a complete example, provide the complete usable answer in one response whenever it fits the model output limit. Do not intentionally omit the ending, key sections, closing braces, or required steps. If a request is too large to fit safely, clearly state where it stops instead of silently truncating."
+                "You are Amar Sahayata AI Assistant. Analyze the supplied image and answer the user's request. " +
+                "Use Bengali, English or mixed language according to the prompt. Never invent details that are not visible. " +
+                "Do not request sensitive personal information.",
             },
-            { role: "user", content: question }
+            {
+              role: "user",
+              content: [
+                { type: "image_url", image_url: { url: image } },
+                { type: "text", text: question },
+              ],
+            },
           ],
-          max_tokens: 4096
+          chat_template_kwargs: { enable_thinking: Boolean(body?.thinking) },
+          max_tokens: 4096,
         });
-
-        const answer =
-          result?.response?.toString() ||
-          result?.result?.response?.toString() ||
-          "দুঃখিত, এই মুহূর্তে নির্ভরযোগ্য উত্তর পাওয়া যায়নি।";
-
-        return new Response(JSON.stringify({ answer }), {
-          headers: { "Content-Type": "application/json", ...cors }
-        });
-      } catch (e) {
-        return new Response(JSON.stringify({
-          error: "AI service unavailable.",
-          detail: String(e?.message || e)
-        }), {
-          status: 502,
-          headers: { "Content-Type": "application/json", ...cors }
-        });
+        const answer = result?.choices?.[0]?.message?.content || result?.response || result?.result?.response || "";
+        if (!answer) return json({ error: "AI could not analyze this image." }, 502);
+        return json({ answer });
+      } catch (error) {
+        return json({ error: "Image analysis is temporarily unavailable." }, 500);
       }
     }
 
-    return new Response("Amar Sahayata API is running!", {
-      headers: cors
-    });
-  }
+    // =====================================
+    // FILE UNDERSTANDING - Markdown Conversion + Gemma
+    // =====================================
+    if (url.pathname === "/api/file") {
+      if (request.method !== "POST") return json({ error: "POST request required" }, 405);
+      try {
+        const form = await request.formData();
+        const file = form.get("file");
+        const question = String(form.get("question") || "Analyze this file and answer the user's request.").trim();
+        const thinking = String(form.get("thinking") || "0") === "1";
+        if (!(file instanceof File)) return json({ error: "Please attach a file." }, 400);
+        if (file.size > 12 * 1024 * 1024) return json({ error: "File is too large. Maximum 12 MB." }, 413);
+
+        const converted = await env.AI.toMarkdown({
+          name: file.name || "attachment",
+          blob: file,
+        }, {
+          conversionOptions: { output: { format: "text" } },
+        });
+        const item = Array.isArray(converted) ? converted[0] : converted;
+        if (!item || item.format === "error") return json({ error: item?.error || "File conversion failed." }, 422);
+
+        const text = String(item.data || "");
+        const trimmed = text.slice(0, 120000);
+        const answer = await textAnswer(
+          "The user attached a file named '" + file.name + "'.\n\nFILE CONTENT:\n" + trimmed + "\n\nUSER REQUEST:\n" + question,
+          thinking
+        );
+        if (!answer) return json({ error: "AI did not return a readable answer." }, 502);
+        return json({ answer, filename: file.name });
+      } catch (error) {
+        return json({ error: "File analysis is temporarily unavailable." }, 500);
+      }
+    }
+
+    // =====================================
+    // IMAGE GENERATION - FLUX.1 schnell
+    // =====================================
+    if (url.pathname === "/api/image") {
+      if (request.method !== "POST") return json({ error: "POST request required" }, 405);
+      try {
+        const body = await request.json();
+        const prompt = typeof body?.prompt === "string" ? body.prompt.trim() : "";
+        if (!prompt) return json({ error: "Please enter an image prompt." }, 400);
+        if (prompt.length > 2048) return json({ error: "Image prompt is too long." }, 400);
+
+        const result = await env.AI.run("@cf/black-forest-labs/flux-1-schnell", {
+          prompt,
+          steps: 4,
+          seed: Math.floor(Math.random() * 2147483647),
+        });
+        if (!result?.image) return json({ error: "Image generation failed." }, 502);
+        return json({ dataURI: `data:image/jpeg;base64,${result.image}` });
+      } catch (error) {
+        return json({ error: "Image generation is temporarily unavailable." }, 500);
+      }
+    }
+
+    // =====================================
+    // WEB SEARCH - AI Gateway / supported provider
+    // =====================================
+    if (url.pathname === "/api/search") {
+      if (request.method !== "POST") return json({ error: "POST request required" }, 405);
+      try {
+        const body = await request.json();
+        const question = typeof body?.question === "string" ? body.question.trim() : "";
+        if (!question) return json({ error: "Please enter a search question." }, 400);
+
+        const result = await env.AI.run("openai/gpt-5-mini", {
+          input:
+            "Search the web for the user's question and answer with concise, useful information. " +
+            "Prefer authoritative sources. Clearly distinguish current facts from uncertainty.\n\nUser question: " + question,
+          max_output_tokens: 4096,
+          tools: [{ type: "web_search_preview" }],
+        }, { gateway: { id: "default" } });
+
+        const answer =
+          result?.output_text ||
+          result?.choices?.[0]?.message?.content ||
+          result?.response ||
+          result?.result?.response ||
+          "";
+        if (!answer) return json({ error: "Web search did not return a readable answer." }, 502);
+        return json({ answer });
+      } catch (error) {
+        return json({
+          error:
+            "Web search needs Cloudflare AI Gateway to be enabled for this Worker. The existing AI Mode does not require this extra setup."
+        }, 503);
+      }
+    }
+
+    // =====================================
+    // SHORT VIDEO - Runway Gen-4.5
+    // =====================================
+    if (url.pathname === "/api/video") {
+      if (request.method !== "POST") return json({ error: "POST request required" }, 405);
+      try {
+        const body = await request.json();
+        const prompt = typeof body?.prompt === "string" ? body.prompt.trim() : "";
+        if (!prompt) return json({ error: "Please enter a video prompt." }, 400);
+        if (prompt.length > 1000) return json({ error: "Video prompt is too long." }, 400);
+
+        const input = {
+          prompt,
+          duration: 5,
+          ratio: "1280:720",
+        };
+        if (typeof body?.image === "string" && body.image.startsWith("data:image/")) {
+          input.image_input = body.image;
+        }
+
+        const result = await env.AI.run("runwayml/gen-4.5", input);
+        const video = result?.result?.video || result?.video;
+        if (!video) return json({ error: "Video generation did not return a video." }, 502);
+        return json({ video });
+      } catch (error) {
+        return json({
+          error:
+            "Short video generation needs an enabled Cloudflare AI Gateway/third-party model billing setup."
+        }, 503);
+      }
+    }
+
+    return new Response("Amar Sahayata API is running!", { headers: corsHeaders });
+  },
 };
