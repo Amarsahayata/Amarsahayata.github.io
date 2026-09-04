@@ -183,6 +183,43 @@ export default {
     }
 
     // =====================================
+    // IMAGE EDITING - FLUX.2 klein 4B
+    // =====================================
+    if (url.pathname === "/api/edit-image") {
+      if (request.method !== "POST") return json({ error: "POST request required" }, 405);
+      try {
+        const body = await request.json();
+        const prompt = typeof body?.prompt === "string" ? body.prompt.trim() : "";
+        const image = typeof body?.image === "string" ? body.image : "";
+        if (!prompt) return json({ error: "Please enter an image-edit prompt." }, 400);
+        if (!image.startsWith("data:image/")) return json({ error: "A valid image is required." }, 400);
+        if (image.length > 8_000_000) return json({ error: "Image is too large. Please use a smaller photo." }, 413);
+
+        const match = image.match(/^data:image\/([a-zA-Z0-9.+-]+);base64,(.+)$/s);
+        if (!match) return json({ error: "Invalid image data." }, 400);
+        const mime = `image/${match[1].toLowerCase() === "jpg" ? "jpeg" : match[1].toLowerCase()}`;
+        const binary = Uint8Array.from(atob(match[2]), c => c.charCodeAt(0));
+        const form = new FormData();
+        form.append("prompt", prompt);
+        form.append("input_image_0", new Blob([binary], { type: mime }), "input-image.${mime.split("/")[1]}");
+        form.append("width", "1024");
+        form.append("height", "1024");
+
+        const formRequest = new Request("https://dummy.invalid", { method: "POST", body: form });
+        const result = await env.AI.run("@cf/black-forest-labs/flux-2-klein-4b", {
+          multipart: {
+            body: formRequest.body,
+            contentType: formRequest.headers.get("content-type") || "multipart/form-data",
+          },
+        });
+        if (!result?.image) return json({ error: "Image editing failed." }, 502);
+        return json({ dataURI: `data:image/jpeg;base64,${result.image}`, answer: "ছবিটি আপনার prompt অনুযায়ী edit করার চেষ্টা করা হয়েছে।" });
+      } catch (error) {
+        return json({ error: "Image editing is temporarily unavailable. Please try again with a smaller photo." }, 503);
+      }
+    }
+
+    // =====================================
     // IMAGE GENERATION - FLUX.1 schnell
     // =====================================
     if (url.pathname === "/api/image") {
