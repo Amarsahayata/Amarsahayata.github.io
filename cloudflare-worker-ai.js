@@ -289,11 +289,15 @@ export default {
         form.append("width", "1024");
         form.append("height", "1024");
 
-        const formRequest = new Request("https://dummy.invalid", { method: "POST", body: form });
-        const result = await aiRun(env, EDIT_MODEL, {
+        // Serialize FormData exactly as required by the Workers AI binding.
+        const formResponse = new Response(form);
+        const formStream = formResponse.body;
+        const formContentType = formResponse.headers.get("content-type");
+
+        const result = await env.AI.run(EDIT_MODEL, {
           multipart: {
-            body: formRequest.body,
-            contentType: formRequest.headers.get("content-type") || "multipart/form-data",
+            body: formStream,
+            contentType: formContentType || "multipart/form-data",
           },
         });
 
@@ -318,7 +322,7 @@ export default {
         if (!prompt) return json({ error: "Please enter an image prompt." }, 400);
         if (prompt.length > 2048) return json({ error: "Image prompt is too long." }, 400);
 
-        const result = await aiRun(env, IMAGE_MODEL, {
+        const result = await env.AI.run(IMAGE_MODEL, {
           prompt,
           steps: 4,
           seed: Math.floor(Math.random() * 2147483647),
