@@ -23,6 +23,16 @@
  */
 
 const GATEWAY_ID = "default";
+
+async function aiRun(env, model, input, options = {}) {
+  return env.AI.run(model, input, {
+    ...options,
+    gateway: {
+      id: GATEWAY_ID,
+      ...(options.gateway || {}),
+    },
+  });
+}
 const TEXT_MODEL = "@cf/google/gemma-4-26b-a4b-it";
 const IMAGE_MODEL = "@cf/black-forest-labs/flux-1-schnell";
 const EDIT_MODEL = "@cf/black-forest-labs/flux-2-klein-4b";
@@ -115,13 +125,13 @@ export default {
       };
 
       try {
-        return await env.AI.run(TEXT_MODEL, options);
+        return await aiRun(env, TEXT_MODEL, options);
       } catch (firstError) {
         const first = errorInfo(firstError);
         // A single retry helps with transient 3040/out-of-capacity errors.
         if (first.code === "3040" || first.status === 429) {
           await new Promise(resolve => setTimeout(resolve, 350));
-          return await env.AI.run(TEXT_MODEL, options);
+          return await aiRun(env, TEXT_MODEL, options);
         }
         throw firstError;
       }
@@ -189,7 +199,7 @@ export default {
         if (!image.startsWith("data:image/")) return json({ error: "A valid image is required." }, 400);
         if (image.length > 16_000_000) return json({ error: "Image is too large. Please use a smaller photo." }, 413);
 
-        const result = await env.AI.run(TEXT_MODEL, {
+        const result = await aiRun(env, TEXT_MODEL, {
           messages: [
             {
               role: "system",
@@ -280,7 +290,7 @@ export default {
         form.append("height", "1024");
 
         const formRequest = new Request("https://dummy.invalid", { method: "POST", body: form });
-        const result = await env.AI.run(EDIT_MODEL, {
+        const result = await aiRun(env, EDIT_MODEL, {
           multipart: {
             body: formRequest.body,
             contentType: formRequest.headers.get("content-type") || "multipart/form-data",
@@ -308,7 +318,7 @@ export default {
         if (!prompt) return json({ error: "Please enter an image prompt." }, 400);
         if (prompt.length > 2048) return json({ error: "Image prompt is too long." }, 400);
 
-        const result = await env.AI.run(IMAGE_MODEL, {
+        const result = await aiRun(env, IMAGE_MODEL, {
           prompt,
           steps: 4,
           seed: Math.floor(Math.random() * 2147483647),
@@ -331,8 +341,7 @@ export default {
         if (!question) return json({ error: "Please enter a search question." }, 400);
         if (question.length > 8000) return json({ error: "Search question is too long." }, 400);
 
-        const result = await env.AI.run(
-          SEARCH_MODEL,
+        const result = await aiRun(env, SEARCH_MODEL,
           {
             input:
               "Search the web for the user's question. Answer in the same language as the user. " +
@@ -340,8 +349,7 @@ export default {
               "User question: " + question,
             max_output_tokens: 2048,
             tools: [{ type: "web_search_preview" }],
-          },
-          { gateway: { id: GATEWAY_ID } }
+          }
         );
 
         const answer = extractText(result);
@@ -379,9 +387,7 @@ export default {
           input.image_input = body.image;
         }
 
-        const result = await env.AI.run(VIDEO_MODEL, input, {
-          gateway: { id: GATEWAY_ID },
-        });
+        const result = await aiRun(env, VIDEO_MODEL, input);
         const video = result?.result?.video || result?.video;
         if (!video) return json({ error: "Video generation did not return a video." }, 502);
         return json({ video, answer: "Short video তৈরি হয়েছে।" });
