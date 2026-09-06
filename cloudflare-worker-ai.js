@@ -43,8 +43,17 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    const requestOrigin = request.headers.get("Origin") || "";
+    const configuredOrigin = String(env.ALLOWED_ORIGIN || "").trim();
+    const allowedOrigin =
+      requestOrigin === "https://amarsahayata.github.io" ||
+      (configuredOrigin && requestOrigin === configuredOrigin)
+        ? requestOrigin
+        : "https://amarsahayata.github.io";
+
     const corsHeaders = {
-      "Access-Control-Allow-Origin": "https://amarsahayata.github.io",
+      "Access-Control-Allow-Origin": allowedOrigin,
+      "Vary": "Origin",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Max-Age": "86400",
@@ -121,7 +130,7 @@ export default {
         ],
         chat_template_kwargs: { enable_thinking: Boolean(thinking) },
         // Kept deliberately moderate to reduce unnecessary daily AI usage.
-        max_tokens: thinking ? 2048 : 1536,
+        max_tokens: thinking ? 8192 : 8192,
       };
 
       try {
@@ -157,6 +166,8 @@ export default {
         return new Response("Method Not Allowed", { status: 405, headers: corsHeaders });
       }
       try {
+        await env.DB.prepare("CREATE TABLE IF NOT EXISTS visitors (id INTEGER PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)").run();
+        await env.DB.prepare("INSERT OR IGNORE INTO visitors (id, count) VALUES (1, 0)").run();
         await env.DB.prepare("UPDATE visitors SET count = count + 1 WHERE id = 1").run();
         const result = await env.DB.prepare("SELECT count FROM visitors WHERE id = 1").first();
         return json({ count: result?.count ?? 0 });
@@ -217,7 +228,7 @@ export default {
             },
           ],
           chat_template_kwargs: { enable_thinking: Boolean(body?.thinking) },
-          max_tokens: body?.thinking ? 2048 : 1536,
+          max_tokens: body?.thinking ? 8192 : 8192,
         });
 
         const answer = extractText(result);
@@ -241,16 +252,26 @@ export default {
         if (!(file instanceof File)) return json({ error: "Please attach a file." }, 400);
         if (file.size > 12 * 1024 * 1024) return json({ error: "File is too large. Maximum 12 MB." }, 413);
 
-        const converted = await env.AI.toMarkdown(
-          { name: file.name || "attachment", blob: file },
-          { conversionOptions: { output: { format: "text" } } }
-        );
-        const item = Array.isArray(converted) ? converted[0] : converted;
-        if (!item || item.format === "error") {
-          return json({ error: item?.error || "File conversion failed." }, 422);
+        const lowerName = String(file.name || "").toLowerCase();
+        const plainTextExt = /\.(txt|md|markdown|csv|json|xml|html|htm)$/i;
+        let text = "";
+
+        // Read plain-text formats directly; use Cloudflare Markdown Conversion
+        // for rich documents such as PDF, DOCX and XLSX.
+        if (plainTextExt.test(lowerName) && !/^image\//i.test(file.type)) {
+          text = await file.text();
+        } else {
+          const converted = await env.AI.toMarkdown(
+            { name: file.name || "attachment", blob: file },
+            { conversionOptions: { output: { format: "text" } } }
+          );
+          const item = Array.isArray(converted) ? converted[0] : converted;
+          if (!item || item.format === "error") {
+            return json({ error: item?.error || "File conversion failed." }, 422);
+          }
+          text = String(item.data || "");
         }
 
-        const text = String(item.data || "");
         const trimmed = text.slice(0, 120000);
         const result = await runText(
           "The user attached a file named '" + file.name + "'.\n\nFILE CONTENT:\n" +

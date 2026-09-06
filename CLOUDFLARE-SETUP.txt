@@ -1,13 +1,40 @@
 AMAR SAHAYATA — GitHub Pages + Cloudflare Worker
 
-The existing website files and earning/verification code are preserved.
-index.html uses:
-- Visitor API: https://amar-sahayata-counter.nilay-das1990.workers.dev/visitor
-- AI API: https://amar-sahayata-counter.nilay-das1990.workers.dev/api/ask
+WEBSITE DESIGN:
+- index.html is intentionally kept unchanged from the supplied FINAL package.
+- Existing calculators, official links, Google verification/analytics and ad scripts are preserved.
+- No visual redesign was made.
 
-For AI to answer questions, the Cloudflare Worker must have:
-1) D1 binding: variable name DB -> amar-sahayata-db
-2) Workers AI binding: variable name AI -> Workers AI
+GITHUB PAGES:
+- Upload the website files to the GitHub repository.
+- GitHub Pages serves the static index.html.
+- Do NOT try to run server.js on GitHub Pages; it is only the optional Node/server version.
 
-Use cloudflare-worker-ai.js as the Worker code, then Deploy.
-The GitHub Pages site remains static and unchanged apart from the API endpoints.
+CLOUDFLARE WORKER:
+- Use cloudflare-worker-ai.js as the Worker code.
+- Worker name/endpoints currently used by index.html:
+  https://amar-sahayata-counter.nilay-das1990.workers.dev/visitor
+  https://amar-sahayata-counter.nilay-das1990.workers.dev/api/ask
+
+REQUIRED CLOUDFLARE BINDINGS:
+1) Workers AI binding: variable name AI
+2) D1 binding: variable name DB -> database amar-sahayata-db
+3) Optional Worker variable: ALLOWED_ORIGIN = https://amarsahayata.github.io
+
+D1:
+- The Worker now creates the visitors table/row automatically on first /visitor request.
+- d1-schema.sql is also included if you prefer to initialize the database manually.
+
+AI:
+- Gemma 4 26B A4B is used for normal AI, thinking mode and vision.
+- FLUX.1 schnell is used for text-to-image.
+- FLUX.2 klein 4B is used for image editing.
+- OpenAI GPT-5 mini + web_search_preview is used for Web Search through AI Gateway.
+- Runway Gen-4.5 is used for Short Video through AI Gateway.
+- Third-party AI features (OpenAI/Runway) require the relevant Cloudflare AI Gateway billing/credits/provider access.
+- Workers AI usage can also incur Cloudflare usage charges.
+
+IMPORTANT:
+- The code cannot guarantee unlimited/free AI usage.
+- Ad revenue cannot be guaranteed; earnings depend on traffic, geography, ad demand, RPM/CTR, policy compliance and user experience.
+- Adsterra code is NOT present in the supplied package because no Adsterra publisher code/zone ID was supplied. Do not invent a fake Adsterra code.

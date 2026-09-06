@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
+  "name": "amar-sahayata-counter",
+  "main": "cloudflare-worker-ai.js",
+  "compatibility_date": "2026-09-06",
+  "ai": {
+    "binding": "AI"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "amar-sahayata-db",
+      "database_id": "PASTE_YOUR_D1_DATABASE_ID_HERE"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGIN": "https://amarsahayata.github.io"
+  }
+}
