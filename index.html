@@ -829,6 +829,13 @@ footer{
 }
 </style>
 
+
+<style id="caption-craft-float-link">
+.caption-craft-float{position:fixed;left:18px;bottom:18px;z-index:70;display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:999px;background:linear-gradient(135deg,#ff9933,#0757a8 55%,#138808);color:#fff;font-weight:800;font-size:14px;letter-spacing:.1px;text-decoration:none;box-shadow:0 12px 30px rgba(7,59,120,.28),0 3px 10px rgba(0,0,0,.10);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px);transition:transform .2s ease,box-shadow .2s ease;white-space:nowrap}
+.caption-craft-float:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(7,59,120,.34),0 4px 12px rgba(0,0,0,.12)}
+.caption-craft-float .cc-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.18);font-size:14px}
+@media(max-width:560px){.caption-craft-float{left:12px;bottom:12px;padding:11px 13px;font-size:12px;gap:6px}.caption-craft-float .cc-icon{width:22px;height:22px}}
+</style>
 </head>
 <body>
 <amp-auto-ads type="adsense"
@@ -1032,6 +1039,8 @@ function updateClock(){const now=new Date(),date=new Intl.DateTimeFormat('en-IN'
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
 </script>
 
+
+<a class="caption-craft-float" href="https://captioncrafteta.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Visit Caption Craft"><span class="cc-icon">✨</span><span>Caption Craft</span></a>
 <button class="ai-float" aria-label="Open Amar Sahayata AI" onclick="document.getElementById('ai-help').scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>document.getElementById('aiQuestion').focus(),350)">🤖 <span>AI Help</span></button>
 <div class="nilay-das-watermark" aria-label="Website creator watermark">✦ Nilay Das ✦</div>
 <style>
