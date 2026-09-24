@@ -1030,15 +1030,11 @@ function toggleAIVoice(){const btn=document.getElementById('aiMic'),SR=window.Sp
 renderAIHistory();
 
 function getBanglaDate(now){
-  /* Requested display baseline: 31 Aug 2026 = ১৩ ভাদ্র ১৪৩৩. */
   const bnDigits=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
-  const anchor=new Date(2026,7,31), today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  let diff=Math.floor((today-anchor)/86400000),by=1433,mi=4,bd=13+diff;
-  const monthNames=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
-  const monthDays=[31,31,31,31,31,30,30,30,30,30,30,30];
-  while(bd>monthDays[mi]){bd-=monthDays[mi];mi++;if(mi>11){mi=0;by++}}
-  while(bd<1){mi--;if(mi<0){mi=11;by--}bd+=monthDays[mi]}
-  return bnDigits(bd)+' '+monthNames[mi]+' '+bnDigits(by)+' বঙ্গাব্দ';
+  const t=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const names=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  if(t.getFullYear()===2026){const starts=[new Date(2026,3,15),new Date(2026,4,16),new Date(2026,5,16),new Date(2026,6,17),new Date(2026,7,17),new Date(2026,8,19),new Date(2026,9,18),new Date(2026,10,17),new Date(2026,11,17)];let mi=0;for(let i=0;i<starts.length;i++){if(t>=starts[i])mi=i;}return bnDigits(Math.floor((t-starts[mi])/86400000)+1)+' '+names[mi]+' '+bnDigits(1433)+' বঙ্গাব্দ';}
+  const yy=t.getFullYear(),start=new Date(yy,3,15);let by,days;if(t>=start){by=yy-593;days=Math.floor((t-start)/86400000)}else{by=yy-594;const prev=new Date(yy-1,3,15);days=Math.floor((t-prev)/86400000)}let mi=0,lens=[31,31,31,31,31,30,30,30,30,30,30,30];while(mi<11&&days>=lens[mi]){days-=lens[mi++];}return bnDigits(days+1)+' '+names[mi]+' '+bnDigits(by)+' বঙ্গাব্দ';
 }
 function updateClock(){const now=new Date(),date=new Intl.DateTimeFormat('en-IN',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Kolkata'}).format(now),bn=getBanglaDate(now),time=new Intl.DateTimeFormat('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:'Asia/Kolkata'}).format(now),d=document.getElementById('liveDate'),b=document.getElementById('liveBanglaDate'),t=document.getElementById('liveTime'),c=document.getElementById('contentCheckDate');if(d)d.textContent=date;if(b)b.textContent=bn;if(t)t.textContent=time;if(c)c.textContent=date+' • '+bn}updateClock();setInterval(updateClock,1000);
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
@@ -1189,157 +1185,6 @@ footer:before{content:"";position:absolute;width:420px;height:420px;border-radiu
 </style>
 
 
-<!-- Additive Rashifol feature: existing content, links, ads and scripts are retained. -->
-<section id="rashifol" class="rashifol-section">
-<div class="rashifol-wrap">
-<div class="rashifol-heading"><span>✨ 2026 ASTRO GUIDE</span><h2>দৈনিক • সাপ্তাহিক • মাসিক • বার্ষিক রাশিফল</h2><p>জন্মতারিখ ও জন্মসময় দিয়ে নিজের সাধারণ সূর্যরাশি দেখুন, অথবা সরাসরি যেকোনো রাশি বেছে নিন।</p></div>
-<div class="rashifol-tabs">
-<button class="rf-tab active" data-p="daily">দৈনিক</button><button class="rf-tab" data-p="weekly">সাপ্তাহিক</button><button class="rf-tab" data-p="monthly">মাসিক</button><button class="rf-tab" data-p="yearly">বার্ষিক</button>
-</div>
-<div class="rashifol-grid">
-<div class="rf-card"><h3>🔮 আপনার রাশি</h3><p class="rf-muted">জন্মতারিখ ও সময় দিন। জন্মসময় ঐচ্ছিক।</p>
-<label>জন্মতারিখ<input id="rfDob" type="date"></label>
-<label>জন্মসময় <small>(ঐচ্ছিক)</small><input id="rfTime" type="time"></label>
-<label>রাশি<select id="rfSign"><option value="">রাশি নির্বাচন করুন</option>
-<option value="aries">মেষ ♈</option><option value="taurus">বৃষ ♉</option><option value="gemini">মিথুন ♊</option><option value="cancer">কর্কট ♋</option><option value="leo">সিংহ ♌</option><option value="virgo">কন্যা ♍</option><option value="libra">তুলা ♎</option><option value="scorpio">বৃশ্চিক ♏</option><option value="sagittarius">ধনু ♐</option><option value="capricorn">মকর ♑</option><option value="aquarius">কুম্ভ ♒</option><option value="pisces">মীন ♓</option></select></label>
-<button id="rfShow" class="rf-primary">রাশিফল দেখুন ✨</button><div class="rf-note">জন্মতারিখ থেকে সাধারণ সূর্যরাশি নির্ধারণ করা হয়। নির্ভুল জন্মছকের জন্য জন্মস্থানসহ পূর্ণ জ্যোতিষ গণনা দরকার।</div>
-</div>
-<div class="rf-card rf-result"><div class="rf-top"><div><span id="rfPeriod">আজকের রাশিফল</span><h3 id="rfTitle">একটি রাশি নির্বাচন করুন</h3></div><b id="rfIcon">☀️</b></div>
-<div id="rfDate" class="rf-date"></div><p id="rfText">রাশি নির্বাচন করে রাশিফল দেখুন।</p>
-<div class="rf-meters"><div>💼 কর্ম<strong id="rfWork">—</strong></div><div>💰 অর্থ<strong id="rfMoney">—</strong></div><div>❤️ সম্পর্ক<strong id="rfLove">—</strong></div><div>🌿 সুস্থতা<strong id="rfWell">—</strong></div></div>
-<div class="rf-note">রাশিফল বিনোদন ও সাধারণ নির্দেশনার জন্য; গুরুত্বপূর্ণ সিদ্ধান্তের একমাত্র ভিত্তি হিসেবে ব্যবহার করবেন না।</div></div>
-</div><div id="rfZodiac" class="rf-zodiac"></div>
-</div></section>
-<style>
-.rashifol-section{padding:65px 16px;background:linear-gradient(180deg,rgba(255,138,31,.06),rgba(255,255,255,.55),rgba(19,136,8,.06));overflow:hidden}.rashifol-wrap{max-width:1180px;margin:auto}.rashifol-heading{text-align:center}.rashifol-heading span{display:inline-block;padding:7px 13px;border-radius:99px;background:linear-gradient(90deg,#fff0df,#fff,#e9f7e8);font-weight:800;font-size:.75rem}.rashifol-heading h2{font-size:clamp(1.7rem,4vw,2.6rem);margin:12px 0 8px;background:linear-gradient(90deg,#ff8a1f,#164c92,#138808);-webkit-background-clip:text;color:transparent}.rashifol-heading p{opacity:.7}.rashifol-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:24px}.rf-tab{padding:11px 19px;border-radius:99px;border:1px solid #d8e0e8;background:#ffffffc9;font-weight:800}.rf-tab.active{color:white;background:linear-gradient(135deg,#ff8a1f,#164c92 55%,#138808)}.rashifol-grid{display:grid;grid-template-columns:.8fr 1.5fr;gap:18px}.rf-card{padding:23px;border-radius:24px;background:#ffffffc7;border:1px solid #d7e0e8;box-shadow:0 18px 55px #063b7817;backdrop-filter:blur(15px)}.rf-card label{display:block;font-weight:700;margin-top:14px}.rf-card input,.rf-card select{width:100%;box-sizing:border-box;margin-top:6px;padding:12px;border-radius:12px;border:1px solid #ccd8e3;background:#fff;font:inherit}.rf-primary{width:100%;margin-top:17px;padding:13px;border:0;border-radius:13px;color:#fff;font-weight:900;background:linear-gradient(135deg,#ff8a1f,#164c92,#138808)}.rf-muted,.rf-note{opacity:.65;font-size:.82rem;line-height:1.55}.rf-top{display:flex;justify-content:space-between}.rf-top>b{font-size:2.2rem}.rf-date{opacity:.6;font-size:.8rem}.rf-result p{line-height:1.8}.rf-meters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.rf-meters div{padding:12px;text-align:center;border-radius:14px;background:#f7fafc}.rf-meters strong{display:block;margin-top:5px}.rf-zodiac{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-top:17px}.rf-zodiac button{padding:12px 6px;border:1px solid #d7e0e8;border-radius:15px;background:#ffffffc7;font-weight:800}.rf-zodiac button:first-line{font-size:1.3rem}@media(max-width:760px){.rashifol-grid{grid-template-columns:1fr}.rf-meters{grid-template-columns:repeat(2,1fr)}.rf-zodiac{grid-template-columns:repeat(3,1fr)}}@media(max-width:430px){.rf-zodiac{grid-template-columns:repeat(2,1fr)}}
-</style>
-<script>
-(()=>{const S=[['aries','মেষ','♈','🔥',[3,21],[4,19]],['taurus','বৃষ','♉','🌱',[4,20],[5,20]],['gemini','মিথুন','♊','💨',[5,21],[6,20]],['cancer','কর্কট','♋','🌊',[6,21],[7,22]],['leo','সিংহ','♌','☀️',[7,23],[8,22]],['virgo','কন্যা','♍','🌾',[8,23],[9,22]],['libra','তুলা','♎','⚖️',[9,23],[10,22]],['scorpio','বৃশ্চিক','♏','🦂',[10,23],[11,21]],['sagittarius','ধনু','♐','🏹',[11,22],[12,21]],['capricorn','মকর','♑','⛰️',[12,22],[1,19]],['aquarius','কুম্ভ','♒','💧',[1,20],[2,18]],['pisces','মীন','♓','🐟',[2,19],[3,20]]];
-const P={daily:'আজকের রাশিফল',weekly:'এই সপ্তাহের রাশিফল',monthly:'এই মাসের রাশিফল',yearly:'এই বছরের রাশিফল'};
-const T={daily:['আজ পরিকল্পনা ও ধারাবাহিকতার দিকে নজর দিন। ছোট সুযোগ কাজে লাগতে পারে।','কাজ গুছিয়ে করুন এবং অপ্রয়োজনীয় খরচ এড়ান।'],weekly:['এই সপ্তাহে ধৈর্য ও নিয়মিত পরিশ্রম ফল দিতে পারে। নতুন কিছু শেখার সুযোগ আসতে পারে।','আর্থিক বিষয়ে হিসাব করে চলুন এবং গুরুত্বপূর্ণ সিদ্ধান্তের আগে তথ্য যাচাই করুন।'],monthly:['এই মাসে লক্ষ্য পরিষ্কার রেখে এগোনো ভালো। ধীরে ধীরে স্থির অগ্রগতি হতে পারে।','বাজেট ও সময়ের পরিকল্পনা আপনাকে এগিয়ে রাখবে। সম্পর্কেও খোলামেলা যোগাযোগ জরুরি।'],yearly:['এই বছরে শেখা, পরিকল্পনা ও ধারাবাহিকতা গুরুত্বপূর্ণ হতে পারে। নতুন সুযোগ এলে যাচাই করে সিদ্ধান্ত নিন।','দীর্ঘমেয়াদি আর্থিক পরিকল্পনা ও দক্ষতা উন্নয়নে মন দিন। কাছের সম্পর্কগুলোতে সম্মান ও যোগাযোগ বজায় রাখুন।']};
-let period='daily',chosen=null;const $=id=>document.getElementById(id);
-function getSign(v){if(!v)return null;let d=new Date(v+'T00:00:00'),m=d.getMonth()+1,n=d.getDate();return S.find(s=>{let a=s[4],b=s[5];return a[0]===12?((m===12&&n>=a[1])||(m===1&&n<=b[1])):((m===a[0]&&n>=a[1])||(m===b[0]&&n<=b[1]))})}
-function render(){let s=chosen||S[0],d=new Date(),seed=s[0].length+d.getDate()+period.length;$('rfPeriod').textContent=P[period];$('rfTitle').textContent=s[1]+' '+s[2]+' — '+P[period];$('rfIcon').textContent=s[3];$('rfDate').textContent='আপডেট: '+d.toLocaleDateString('bn-BD',{day:'numeric',month:'long',year:'numeric'});$('rfText').textContent=T[period][seed%T[period].length];let v=['উজ্জ্বল','ভালো','স্থিতিশীল','অনুকূল','সতর্ক থাকুন'];$('rfWork').textContent=v[(seed+1)%5];$('rfMoney').textContent=v[(seed+2)%5];$('rfLove').textContent=v[(seed+3)%5];$('rfWell').textContent=v[(seed+4)%5]}
-document.querySelectorAll('.rf-tab').forEach(b=>b.onclick=()=>{period=b.dataset.p;document.querySelectorAll('.rf-tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
-$('rfShow').onclick=()=>{let m=$('rfSign').value;chosen=m?S.find(s=>s[0]===m):getSign($('rfDob').value);if(!chosen)chosen=S[0];render()};
-let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.type='button';b.innerHTML=s[2]+' '+s[1];b.onclick=()=>{chosen=s;$('rfSign').value=s[0];render()};row.appendChild(b)});render()})();
-</script>
-
-
-
-<style id="universal-icon-compat">
-/* Visual-only compatibility: replace emoji UI glyphs with inline SVG icons.
-   This prevents missing-font squares on desktop/mobile without changing layout/content. */
-.as-svg-icon{display:inline-flex;width:1.18em;height:1.18em;vertical-align:-.22em;align-items:center;justify-content:center;flex:0 0 auto;color:currentColor}
-.as-svg-icon svg{width:100%;height:100%;display:block;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.cat .as-svg-icon,.scheme .as-svg-icon,.feature .as-svg-icon{font-size:1em;margin-bottom:2px}
-.navlinks .as-svg-icon{width:1.1em;height:1.1em;vertical-align:-.2em}
-.ai-btn .as-svg-icon,.search button .as-svg-icon{width:1.05em;height:1.05em}
-.contact-icon .as-svg-icon,.visitor-glow .as-svg-icon{width:1em;height:1em}
-.ai-response-actions .as-svg-icon{width:1.05em;height:1.05em}
-/* Use the existing CSS tricolour flag artwork instead of a platform emoji glyph. */
-.hero-card:after{content:""!important;width:250px!important;height:162px!important;border-radius:18px!important;background:linear-gradient(to bottom,#ff9933 0 33.333%,#fff 33.333% 66.666%,#138808 66.666% 100%)!important;box-shadow:0 25px 55px #174d8e22!important;transform:rotate(-7deg)!important;opacity:.95!important;display:block!important;position:relative!important;z-index:4!important;animation:flagBillow 4.2s ease-in-out infinite!important}
-@media(max-width:900px){.hero-card:after{width:230px!important;height:150px!important}}
-@media(max-width:560px){.hero-card:after{width:190px!important;height:124px!important}}
-</style>
-<script id="universal-icon-compat-js">
-(function(){
-  const ICONS={
-    '🏛️':['M3 10h18M5 10V21M9 10V21M15 10V21M19 10V21M3 21h18M4 7l8-4 8 4v3H4V7'],
-    '🧮':['M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM8 6h8M8 11h2M14 11h2M8 15h2M14 15h2M8 19h2M14 19h2'],
-    '📄':['M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM14 2v5h5M8 11h8M8 15h8M8 19h5'],
-    '💼':['M4 7h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2ZM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 12h20M10 12v3h4v-3'],
-    '🎓':['M3 10 12 5l9 5-9 5-9-5ZM6 12v5c3 2 9 2 12 0v-5M21 10v7'],
-    '❤️':['M20.8 8.6c0 5.4-8.8 10.2-8.8 10.2S3.2 14 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z'],
-    '🤖':['M8 8h8a4 4 0 0 1 4 4v6H4v-6a4 4 0 0 1 4-4ZM12 4v4M9 13h.01M15 13h.01M8 18v3M16 18v3M4 14H2M22 14h-2'],
-    '🔎':['M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16ZM21 21l-4.3-4.3'],
-    '📅':['M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2ZM7 2v4M17 2v4M3 9h18M7 13h3M14 13h3M7 17h3'],
-    '👩':['M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0M8 4c1-3 7-3 8 0'],
-    '🧑‍💼':['M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM3 21a6 6 0 0 1 12 0M16 8h5M18 6v4M16 15h5M16 19h5'],
-    '🏥':['M3 6h18v15H3V6ZM8 3h8v5H8V3ZM12 9v8M8 13h8'],
-    '🌾':['M12 21V4M12 10c-4-1-6-3-6-6 4 0 6 2 6 6ZM12 15c4-1 6-3 6-6-4 0-6 2-6 6M12 18c-3-1-5-3-5-5 3 0 5 2 5 5'],
-    '🧓':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0M4 7c1-2 3-3 5-3'],
-    '📚':['M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2V5ZM20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2V5ZM13 4h-2'],
-    '🪪':['M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2ZM7 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM11 10h7M11 14h5'],
-    '🔗':['M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1'],
-    '📁':['M3 6a2 2 0 0 1 2-2h6l2 2h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z'],
-    '📞':['M6 3h3l2 5-2 2a15 15 0 0 0 5 5l2-2 5 2v3a2 2 0 0 1-2 2C10 20 4 14 2 5a2 2 0 0 1 2-2h2'],
-    '📱':['M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM10 18h4'],
-    '📍':['M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12ZM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z'],
-    '👁️':['M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'],
-    '🔊':['M4 9v6h4l5 4V5L8 9H4ZM17 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12'],
-    '🎤':['M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3ZM6 11a6 6 0 0 0 12 0M12 17v4M8 21h8'],
-    '🌐':['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18'],
-    '💰':['M3 7h18v12H3V7ZM7 7V5h10v2M12 11a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z'],
-    '🎂':['M4 10h16v10H4V10ZM2 20h20M12 10V7M12 5v-2M7 10V8M17 10V8M4 14h16'],
-    '🏹':['M3 21 21 3M21 3h-7M21 3v7M6 18l3-3M12 12l3-3'],
-    '⛰️':['M3 20 10 8l4 6 3-4 4 10H3ZM10 8l2-4 2 4'],
-    '✨':['M12 3l1.4 5.6L19 10l-5.6 1.4L12 17l-1.4-5.6L5 10l5.6-1.4L12 3ZM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7L19 16'],
-    '⚕️':['M10 3h4v6h6v4h-6v6h-4v-6H4V9h6V3'],
-    '🗳️':['M4 5h16v12H4V5ZM8 9h8M8 13h5M7 21h10'],
-    '💳':['M3 5h18v14H3V5ZM3 9h18M7 15h5'],
-    '🍚':['M4 12h16M6 12a6 6 0 0 0 12 0M8 17h8M10 20h4'],
-    '🧾':['M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 8h6M9 12h6M9 16h4'],
-    '🏠':['M3 11 12 3l9 8v9H3v-9ZM9 20v-6h6v6'],
-    '🧑':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0'],
-    '💚':['M20.8 8.6c0 5.4-8.8 10.2-8.8 10.2S3.2 14 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z'],
-    '🔮':['M12 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM5 21h14M12 17v4'],
-    '🌱':['M12 21V10M12 13C8 13 5 10 5 6c4 0 7 2 7 7ZM12 16c4 0 7-3 7-7-4 0-7 2-7 7'],
-    '💨':['M3 8h12a3 3 0 1 0-3-3M3 12h17a3 3 0 1 1-3 3M3 16h9'],
-    '🌊':['M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0'],
-    '🦂':['M8 9c-3 0-4 2-4 4 0 2 2 3 4 3 3 0 4-2 4-4V7M12 7V4M12 4h4M16 4v3M16 7c4 0 4 3 3 5M19 12l2 2'],
-    '💧':['M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z'],
-    '🐟':['M3 12s4-6 10-6c4 0 7 3 8 6-1 3-4 6-8 6-6 0-10-6-10-6ZM13 10h.01M13 14h.01M21 12l-3-3v6l3-3Z'],
-    '⚖️':['M12 3v18M5 6h14M7 6l-3 7a4 4 0 0 0 8 0L9 6M17 6l-3 7a4 4 0 0 0 8 0l-3-7M7 21h10'],
-    '🏹':['M3 21 21 3M21 3h-7M21 3v7M6 18l3-3M12 12l3-3'],
-    '👤':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0'],
-    '⚙️':['M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM19 12l2-1-1-3-2 .2a7 7 0 0 0-1.4-1.4L17 4l-3-1-1 2a7 7 0 0 0-2 0L10 3 7 4l.2 2.8A7 7 0 0 0 5.8 8L3 7l-1 3 2 1a7 7 0 0 0 0 2l-2 1 1 3 2.8-.2a7 7 0 0 0 1.4 1.4L7 20l3 1 1-2a7 7 0 0 0 2 0l1 2 3-1-.2-2.8a7 7 0 0 0 1.4-1.4L20 17l1-3-2-1a7 7 0 0 0 0-1Z']
-  };
-  const keys=Object.keys(ICONS).sort((a,b)=>b.length-a.length);
-  const rx=new RegExp('('+keys.map(k=>k.replace(/[.*+?^${}()|[\\]\\]/g,'\\$&')).join('|')+')','g');
-  function icon(key){
-    const span=document.createElement('span');span.className='as-svg-icon';span.setAttribute('aria-hidden','true');
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');
-    const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',ICONS[key][0]);svg.appendChild(path);span.appendChild(svg);return span;
-  }
-  function walk(root){
-    const nodes=[];const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){
-      const p=n.parentElement;if(!p||/^(SCRIPT|STYLE|TEXTAREA|OPTION)$/i.test(p.tagName))return NodeFilter.FILTER_REJECT;
-      return rx.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
-    }});
-    let n;while(n=w.nextNode())nodes.push(n);
-    nodes.forEach(n=>{rx.lastIndex=0;const parts=n.nodeValue.split(rx);if(parts.length<2)return;const frag=document.createDocumentFragment();parts.forEach(part=>{if(ICONS[part])frag.appendChild(icon(part));else if(part)frag.appendChild(document.createTextNode(part));});n.parentNode.replaceChild(frag,n);});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>walk(document.body));else walk(document.body);
-})();
-</script>
-
-
-<style id="as-v9-multimodal-style">
-.as-ai-tools{margin-top:12px;padding:14px;border:1px solid rgba(26,69,112,.12);border-radius:18px;background:rgba(255,255,255,.72);box-shadow:0 10px 30px rgba(20,60,110,.06)}
-.as-ai-tool-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:900;color:#12345a;margin-bottom:10px}
-.as-ai-tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.as-ai-tool{border:1px solid rgba(26,69,112,.13);background:#fff;border-radius:13px;padding:10px 8px;cursor:pointer;font-weight:800;font-size:12px;transition:.2s;min-height:44px}
-.as-ai-tool:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(16,65,120,.11)}
-.as-ai-tool.active{outline:2px solid rgba(8,119,69,.28);background:linear-gradient(135deg,#fff8ee,#f1fff7)}
-.as-ai-file{display:none}
-.as-ai-attachments{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.as-ai-attachment{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f7fafc;border:1px solid #d9e4ee;border-radius:12px;font-size:12px;font-weight:700}
-.as-ai-attachment img{width:42px;height:42px;object-fit:cover;border-radius:9px}
-.as-ai-remove{border:0;background:transparent;cursor:pointer;font-size:16px}
-.as-ai-modal{position:fixed;inset:0;background:rgba(4,18,35,.65);backdrop-filter:blur(5px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
-.as-ai-modal.show{display:flex}.as-ai-modal-box{width:min(720px,100%);background:#fff;border-radius:22px;padding:16px;box-shadow:0 30px 90px rgba(0,0,0,.3)}
-.as-ai-modal-head{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:12px}.as-ai-close{border:0;background:#edf3f8;border-radius:10px;padding:8px 11px;cursor:pointer}
-#asCameraVideo{width:100%;max-height:62vh;object-fit:contain;background:#071522;border-radius:16px}.as-camera-actions{display:flex;gap:10px;margin-top:12px}.as-camera-actions button{flex:1}
-.as-ai-result{margin-top:12px;padding:12px;border-radius:14px;background:#f6fafc;border:1px solid #dce7ef;font-size:13px;line-height:1.55}
-.as-ai-note{font-size:11px;color:#60748b;margin-top:8px}.as-download{margin-top:10px;display:inline-flex!important;align-items:center;gap:5px;padding:8px 11px!important;font-size:12px}.ai .as-ai-tools{margin-top:18px}
-@media(max-width:760px){.as-ai-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.as-ai-tools{padding:11px}.as-ai-tool{font-size:11px}}
-@media(prefers-reduced-motion:reduce){.as-ai-tool{transition:none}.as-ai-tool:hover{transform:none}}
-</style>
-
-
-
-
 <!-- Amar Sahayata Add-on: File Studio + Search + Student Jobs/Mock Test + Bengali Calendar -->
 <section id="as-file-studio" class="asx-section">
   <div class="asx-head">
@@ -1441,7 +1286,7 @@ let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.typ
     </div>
     <div class="asx-card">
       <h3>📝 Mock Test</h3>
-      <select id="asxMockCategory"><option value="general">General Knowledge</option><option value="computer">Computer</option><option value="english">English</option></select>
+      <select id="asxMockCategory"><option value="general">General Knowledge</option><option value="computer">Computer</option><option value="english">English</option><option value="mathematics">Mathematics</option></select>
       <button class="primary" type="button" onclick="ASStudent.startMock()">Start 10-question test</button>
       <div id="asxMock" class="asx-mock"></div>
     </div>
@@ -1452,6 +1297,12 @@ let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.typ
       <a class="asx-link" href="https://nta.ac.in/" target="_blank" rel="noopener">NTA — Exams & Mock Test</a>
       <a class="asx-link" href="https://www.upsc.gov.in/" target="_blank" rel="noopener">UPSC</a>
       <a class="asx-link" href="https://www.apprenticeshipindia.gov.in/" target="_blank" rel="noopener">Apprenticeship India</a>
+    </div>
+    <div class="asx-card">
+      <h3>📚 Student Information</h3>
+      <div class="asx-job"><b>🎯 Study tip</b><span>প্রতিদিন ৩০–৬০ মিনিট Maths + English + GK practice করুন এবং ভুল প্রশ্নের আলাদা revision list রাখুন।</span></div>
+      <div class="asx-job"><b>📝 Exam tip</b><span>Eligibility, last date, syllabus ও fee সবসময় official notification-এ verify করুন।</span></div>
+      <div class="asx-job"><b>🛡️ Safety</b><span>চাকরির নামে টাকা চাইলে আগে official portal verify করুন। OTP/PIN/CVV কখনও share করবেন না।</span></div>
     </div>
   </div>
 </section>
@@ -1613,6 +1464,7 @@ const ASStudent={
  data:{
  general:[['ভারতের সংবিধানের প্রস্তাবনা কোন শব্দ দিয়ে শুরু?','We, the People','Justice','Liberty','India','We, the People'],['ভারতের জাতীয় পাখি?','ময়ূর','কাক','হাঁস','ঈগল','ময়ূর'],['পশ্চিমবঙ্গের রাজধানী?','কলকাতা','শিলিগুড়ি','দুর্গাপুর','হাওড়া','কলকাতা'],['জাতীয় পতাকায় কয়টি রং?','তিনটি','দুটি','চারটি','পাঁচটি','তিনটি'],['ভারতের মুদ্রা?','রুপি','ডলার','পাউন্ড','ইউরো','রুপি'],['ভারতের স্বাধীনতা দিবস?','১৫ আগস্ট','২৬ জানুয়ারি','২ অক্টোবর','১৪ এপ্রিল','১৫ আগস্ট'],['সংবিধান দিবস?','২৬ নভেম্বর','১৫ আগস্ট','২৬ জানুয়ারি','৫ সেপ্টেম্বর','২৬ নভেম্বর'],['জাতীয় ফুল?','পদ্ম','গোলাপ','জবা','শিউলি','পদ্ম'],['লোকসভা সদস্যদের মেয়াদ সাধারণত?','৫ বছর','৩ বছর','৬ বছর','৪ বছর','৫ বছর'],['ভারতের সর্বোচ্চ আদালত?','সুপ্রিম কোর্ট','হাইকোর্ট','জেলা আদালত','গ্রাম আদালত','সুপ্রিম কোর্ট']],
  computer:[['CPU-এর পূর্ণরূপ?','Central Processing Unit','Computer Personal Unit','Core Program Utility','Central Print Unit','Central Processing Unit'],['RAM কী?','Volatile memory','Permanent storage','Browser','CPU fan','Volatile memory'],['HTML কী?','Markup language','Database','OS','Compiler','Markup language'],['URL-এর পূর্ণরূপ?','Uniform Resource Locator','Universal Record Link','User Route List','Unified Resource Login','Uniform Resource Locator'],['HTTPS কী যোগ করে?','Encrypted connection','Printer support','Offline mode','File compression','Encrypted connection'],['CSV সাধারণত কী?','Tabular text data','Image','Video','Audio','Tabular text data'],['PDF-এর পূর্ণরূপ?','Portable Document Format','Public Data File','Print Document Folder','Program Data Form','Portable Document Format'],['Spreadsheet-এর উদাহরণ?','Excel','Paint','Notepad','Camera','Excel'],['Browser-এর উদাহরণ?','Chrome','Linux','RAM','USB','Chrome'],['Cloud storage কী?','Remote online storage','CPU cache','Keyboard memory','Monitor','Remote online storage']],
+ mathematics:[['12 + 18 × 2 = ?','48','60','42','36','48'],['25% of 240 = ?','60','50','40','80','60'],['√144 = ?','12','14','10','16','12'],['If 3x = 27, x = ?','9','6','8','12','9'],['A train travels 120 km in 2 hours. Speed = ?','60 km/h','40 km/h','80 km/h','120 km/h','60 km/h'],['Average of 10, 20, 30, 40 = ?','25','20','30','35','25'],['LCM of 6 and 8 = ?','24','12','48','18','24'],['Simple interest on ₹1000 at 10% for 2 years = ?','₹200','₹100','₹150','₹250','₹200'],['A shop gives 20% discount on ₹500. Sale price = ?','₹400','₹420','₹450','₹380','₹400'],['Ratio 2:3, total 25. First part = ?','10','12','8','15','10']],
  english:[['Choose the correct plural: child','children','childs','childes','childrens','children'],['Opposite of “ancient”','modern','old','past','former','modern'],['Synonym of “rapid”','fast','late','weak','small','fast'],['Correct spelling','necessary','neccessary','necessery','necesary','necessary'],['Fill: She ___ to school every day.','goes','go','going','gone','goes'],['Past tense of “write”','wrote','written','write','writes','wrote'],['Article: ___ apple','an','a','thee','no article','an'],['Plural of “mouse”','mice','mouses','mouse','meese','mice'],['Opposite of “expand”','contract','increase','extend','grow','contract'],['Correct: He is ___ honest man.','an','a','the','no article','an']]
  },
  portals:[
@@ -1639,7 +1491,19 @@ const ASCalendar=(()=>{
  const bn=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
  const dow=['রবি','সোম','মঙ্গল','বুধ','বৃহস্পতি','শুক্র','শনি'];
  const bnNum=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
- function banglaDate(dt){const yy=dt.getFullYear(), start=new Date(yy,3,14);let by,days;if(dt>=start){by=yy-593;days=Math.floor((dt-start)/86400000)}else{by=yy-594;const prev=new Date(yy-1,3,14);days=Math.floor((dt-prev)/86400000)}let mi=0, lens=[31,31,31,31,31,30,30,30,30,30,30,30];while(mi<11 && days>=lens[mi]){days-=lens[mi++]}return {year:by,month:mi,day:days+1}}
+ function banglaDate(dt){
+   // Kolkata/Bisuddha-Siddhanta verified baseline: 25 Sep 2026 = ৭ আশ্বিন ১৪৩৩.
+   const target=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());
+   if(target.getFullYear()===2026){
+     const starts=[new Date(2026,3,15),new Date(2026,4,16),new Date(2026,5,16),new Date(2026,6,17),new Date(2026,7,17),new Date(2026,8,19),new Date(2026,9,18),new Date(2026,10,17),new Date(2026,11,17)];
+     let mi=0;for(let i=0;i<starts.length;i++){if(target>=starts[i])mi=i;}
+     return {year:1433,month:mi,day:Math.floor((target-starts[mi])/86400000)+1};
+   }
+   const yy=target.getFullYear(), start=new Date(yy,3,15);let by,days;
+   if(target>=start){by=yy-593;days=Math.floor((target-start)/86400000)}else{by=yy-594;const prev=new Date(yy-1,3,15);days=Math.floor((target-prev)/86400000)}
+   let mi=0,lens=[31,31,31,31,31,30,30,30,30,30,30,30];while(mi<11&&days>=lens[mi]){days-=lens[mi++];}
+   return {year:by,month:mi,day:days+1};
+ }
  function render(){const title=$('asCalTitle'),grid=$('asCalGrid'),sel=$('asCalYear');if(!title)return;title.textContent=new Intl.DateTimeFormat('bn-BD',{month:'long',year:'numeric'}).format(new Date(y,m,1));sel.innerHTML='';for(let yy=y-5;yy<=y+5;yy++){const o=document.createElement('option');o.value=yy;o.textContent=yy;o.selected=yy===y;sel.appendChild(o)}grid.innerHTML=dow.map(x=>'<div class="dow">'+x+'</div>').join('');const first=new Date(y,m,1).getDay(),count=new Date(y,m+1,0).getDate();for(let i=0;i<first;i++)grid.insertAdjacentHTML('beforeend','<div></div>');for(let d=1;d<=count;d++){const dt=new Date(y,m,d),b=banglaDate(dt),today=new Date();const c=document.createElement('div');if(dt.toDateString()===today.toDateString())c.classList.add('today');c.innerHTML='<b>'+bnNum(d)+'</b><div class="bn">'+bn[ b.month ]+' '+bnNum(b.day)+'</div>';grid.appendChild(c)}const b=banglaDate(new Date());$('asTodayBangla').textContent='আজ: '+bn[b.month]+' '+bnNum(b.day)+', '+bnNum(b.year)+' বঙ্গাব্দ'}
  return {prev(){m--;if(m<0){m=11;y--}render()},next(){m++;if(m>11){m=0;y++}render()},setYear(v){y=Number(v);render()},render}
 })();
@@ -1653,5 +1517,157 @@ window.ASFileStudio=ASFileStudio;window.ASStudent=ASStudent;window.ASCalendar=AS
 document.addEventListener('DOMContentLoaded',()=>{ASStudent.searchJobs();ASCalendar.render();});
 })();
 </script>
+
+<!-- Additive Rashifol feature: existing content, links, ads and scripts are retained. -->
+<section id="rashifol" class="rashifol-section">
+<div class="rashifol-wrap">
+<div class="rashifol-heading"><span>✨ 2026 ASTRO GUIDE</span><h2>দৈনিক • সাপ্তাহিক • মাসিক • বার্ষিক রাশিফল</h2><p>জন্মতারিখ ও জন্মসময় দিয়ে নিজের সাধারণ সূর্যরাশি দেখুন, অথবা সরাসরি যেকোনো রাশি বেছে নিন।</p></div>
+<div class="rashifol-tabs">
+<button class="rf-tab active" data-p="daily">দৈনিক</button><button class="rf-tab" data-p="weekly">সাপ্তাহিক</button><button class="rf-tab" data-p="monthly">মাসিক</button><button class="rf-tab" data-p="yearly">বার্ষিক</button>
+</div>
+<div class="rashifol-grid">
+<div class="rf-card"><h3>🔮 আপনার রাশি</h3><p class="rf-muted">জন্মতারিখ ও সময় দিন। জন্মসময় ঐচ্ছিক।</p>
+<label>জন্মতারিখ<input id="rfDob" type="date"></label>
+<label>জন্মসময় <small>(ঐচ্ছিক)</small><input id="rfTime" type="time"></label>
+<label>রাশি<select id="rfSign"><option value="">রাশি নির্বাচন করুন</option>
+<option value="aries">মেষ ♈</option><option value="taurus">বৃষ ♉</option><option value="gemini">মিথুন ♊</option><option value="cancer">কর্কট ♋</option><option value="leo">সিংহ ♌</option><option value="virgo">কন্যা ♍</option><option value="libra">তুলা ♎</option><option value="scorpio">বৃশ্চিক ♏</option><option value="sagittarius">ধনু ♐</option><option value="capricorn">মকর ♑</option><option value="aquarius">কুম্ভ ♒</option><option value="pisces">মীন ♓</option></select></label>
+<button id="rfShow" class="rf-primary">রাশিফল দেখুন ✨</button><div class="rf-note">জন্মতারিখ থেকে সাধারণ সূর্যরাশি নির্ধারণ করা হয়। নির্ভুল জন্মছকের জন্য জন্মস্থানসহ পূর্ণ জ্যোতিষ গণনা দরকার।</div>
+</div>
+<div class="rf-card rf-result"><div class="rf-top"><div><span id="rfPeriod">আজকের রাশিফল</span><h3 id="rfTitle">একটি রাশি নির্বাচন করুন</h3></div><b id="rfIcon">☀️</b></div>
+<div id="rfDate" class="rf-date"></div><p id="rfText">রাশি নির্বাচন করে রাশিফল দেখুন।</p>
+<div class="rf-meters"><div>💼 কর্ম<strong id="rfWork">—</strong></div><div>💰 অর্থ<strong id="rfMoney">—</strong></div><div>❤️ সম্পর্ক<strong id="rfLove">—</strong></div><div>🌿 সুস্থতা<strong id="rfWell">—</strong></div></div>
+<div class="rf-note">রাশিফল বিনোদন ও সাধারণ নির্দেশনার জন্য; গুরুত্বপূর্ণ সিদ্ধান্তের একমাত্র ভিত্তি হিসেবে ব্যবহার করবেন না।</div></div>
+</div><div id="rfZodiac" class="rf-zodiac"></div>
+</div></section>
+<style>
+.rashifol-section{padding:65px 16px;background:linear-gradient(180deg,rgba(255,138,31,.06),rgba(255,255,255,.55),rgba(19,136,8,.06));overflow:hidden}.rashifol-wrap{max-width:1180px;margin:auto}.rashifol-heading{text-align:center}.rashifol-heading span{display:inline-block;padding:7px 13px;border-radius:99px;background:linear-gradient(90deg,#fff0df,#fff,#e9f7e8);font-weight:800;font-size:.75rem}.rashifol-heading h2{font-size:clamp(1.7rem,4vw,2.6rem);margin:12px 0 8px;background:linear-gradient(90deg,#ff8a1f,#164c92,#138808);-webkit-background-clip:text;color:transparent}.rashifol-heading p{opacity:.7}.rashifol-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:24px}.rf-tab{padding:11px 19px;border-radius:99px;border:1px solid #d8e0e8;background:#ffffffc9;font-weight:800}.rf-tab.active{color:white;background:linear-gradient(135deg,#ff8a1f,#164c92 55%,#138808)}.rashifol-grid{display:grid;grid-template-columns:.8fr 1.5fr;gap:18px}.rf-card{padding:23px;border-radius:24px;background:#ffffffc7;border:1px solid #d7e0e8;box-shadow:0 18px 55px #063b7817;backdrop-filter:blur(15px)}.rf-card label{display:block;font-weight:700;margin-top:14px}.rf-card input,.rf-card select{width:100%;box-sizing:border-box;margin-top:6px;padding:12px;border-radius:12px;border:1px solid #ccd8e3;background:#fff;font:inherit}.rf-primary{width:100%;margin-top:17px;padding:13px;border:0;border-radius:13px;color:#fff;font-weight:900;background:linear-gradient(135deg,#ff8a1f,#164c92,#138808)}.rf-muted,.rf-note{opacity:.65;font-size:.82rem;line-height:1.55}.rf-top{display:flex;justify-content:space-between}.rf-top>b{font-size:2.2rem}.rf-date{opacity:.6;font-size:.8rem}.rf-result p{line-height:1.8}.rf-meters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.rf-meters div{padding:12px;text-align:center;border-radius:14px;background:#f7fafc}.rf-meters strong{display:block;margin-top:5px}.rf-zodiac{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-top:17px}.rf-zodiac button{padding:12px 6px;border:1px solid #d7e0e8;border-radius:15px;background:#ffffffc7;font-weight:800}.rf-zodiac button:first-line{font-size:1.3rem}@media(max-width:760px){.rashifol-grid{grid-template-columns:1fr}.rf-meters{grid-template-columns:repeat(2,1fr)}.rf-zodiac{grid-template-columns:repeat(3,1fr)}}@media(max-width:430px){.rf-zodiac{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script>
+(()=>{const S=[['aries','মেষ','♈','🔥',[3,21],[4,19]],['taurus','বৃষ','♉','🌱',[4,20],[5,20]],['gemini','মিথুন','♊','💨',[5,21],[6,20]],['cancer','কর্কট','♋','🌊',[6,21],[7,22]],['leo','সিংহ','♌','☀️',[7,23],[8,22]],['virgo','কন্যা','♍','🌾',[8,23],[9,22]],['libra','তুলা','♎','⚖️',[9,23],[10,22]],['scorpio','বৃশ্চিক','♏','🦂',[10,23],[11,21]],['sagittarius','ধনু','♐','🏹',[11,22],[12,21]],['capricorn','মকর','♑','⛰️',[12,22],[1,19]],['aquarius','কুম্ভ','♒','💧',[1,20],[2,18]],['pisces','মীন','♓','🐟',[2,19],[3,20]]];
+const P={daily:'আজকের রাশিফল',weekly:'এই সপ্তাহের রাশিফল',monthly:'এই মাসের রাশিফল',yearly:'এই বছরের রাশিফল'};
+const T={daily:['আজ পরিকল্পনা ও ধারাবাহিকতার দিকে নজর দিন। ছোট সুযোগ কাজে লাগতে পারে।','কাজ গুছিয়ে করুন এবং অপ্রয়োজনীয় খরচ এড়ান।'],weekly:['এই সপ্তাহে ধৈর্য ও নিয়মিত পরিশ্রম ফল দিতে পারে। নতুন কিছু শেখার সুযোগ আসতে পারে।','আর্থিক বিষয়ে হিসাব করে চলুন এবং গুরুত্বপূর্ণ সিদ্ধান্তের আগে তথ্য যাচাই করুন।'],monthly:['এই মাসে লক্ষ্য পরিষ্কার রেখে এগোনো ভালো। ধীরে ধীরে স্থির অগ্রগতি হতে পারে।','বাজেট ও সময়ের পরিকল্পনা আপনাকে এগিয়ে রাখবে। সম্পর্কেও খোলামেলা যোগাযোগ জরুরি।'],yearly:['এই বছরে শেখা, পরিকল্পনা ও ধারাবাহিকতা গুরুত্বপূর্ণ হতে পারে। নতুন সুযোগ এলে যাচাই করে সিদ্ধান্ত নিন।','দীর্ঘমেয়াদি আর্থিক পরিকল্পনা ও দক্ষতা উন্নয়নে মন দিন। কাছের সম্পর্কগুলোতে সম্মান ও যোগাযোগ বজায় রাখুন।']};
+let period='daily',chosen=null;const $=id=>document.getElementById(id);
+function getSign(v){if(!v)return null;let d=new Date(v+'T00:00:00'),m=d.getMonth()+1,n=d.getDate();return S.find(s=>{let a=s[4],b=s[5];return a[0]===12?((m===12&&n>=a[1])||(m===1&&n<=b[1])):((m===a[0]&&n>=a[1])||(m===b[0]&&n<=b[1]))})}
+function render(){let s=chosen||S[0],d=new Date(),seed=s[0].length+d.getDate()+period.length;$('rfPeriod').textContent=P[period];$('rfTitle').textContent=s[1]+' '+s[2]+' — '+P[period];$('rfIcon').textContent=s[3];$('rfDate').textContent='আপডেট: '+d.toLocaleDateString('bn-BD',{day:'numeric',month:'long',year:'numeric'});$('rfText').textContent=T[period][seed%T[period].length];let v=['উজ্জ্বল','ভালো','স্থিতিশীল','অনুকূল','সতর্ক থাকুন'];$('rfWork').textContent=v[(seed+1)%5];$('rfMoney').textContent=v[(seed+2)%5];$('rfLove').textContent=v[(seed+3)%5];$('rfWell').textContent=v[(seed+4)%5]}
+document.querySelectorAll('.rf-tab').forEach(b=>b.onclick=()=>{period=b.dataset.p;document.querySelectorAll('.rf-tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');render()});
+$('rfShow').onclick=()=>{let m=$('rfSign').value;chosen=m?S.find(s=>s[0]===m):getSign($('rfDob').value);if(!chosen)chosen=S[0];render()};
+let row=$('rfZodiac');S.forEach(s=>{let b=document.createElement('button');b.type='button';b.innerHTML=s[2]+' '+s[1];b.onclick=()=>{chosen=s;$('rfSign').value=s[0];render()};row.appendChild(b)});render()})();
+</script>
+
+
+
+<style id="universal-icon-compat">
+/* Visual-only compatibility: replace emoji UI glyphs with inline SVG icons.
+   This prevents missing-font squares on desktop/mobile without changing layout/content. */
+.as-svg-icon{display:inline-flex;width:1.18em;height:1.18em;vertical-align:-.22em;align-items:center;justify-content:center;flex:0 0 auto;color:currentColor}
+.as-svg-icon svg{width:100%;height:100%;display:block;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.cat .as-svg-icon,.scheme .as-svg-icon,.feature .as-svg-icon{font-size:1em;margin-bottom:2px}
+.navlinks .as-svg-icon{width:1.1em;height:1.1em;vertical-align:-.2em}
+.ai-btn .as-svg-icon,.search button .as-svg-icon{width:1.05em;height:1.05em}
+.contact-icon .as-svg-icon,.visitor-glow .as-svg-icon{width:1em;height:1em}
+.ai-response-actions .as-svg-icon{width:1.05em;height:1.05em}
+/* Use the existing CSS tricolour flag artwork instead of a platform emoji glyph. */
+.hero-card:after{content:""!important;width:250px!important;height:162px!important;border-radius:18px!important;background:linear-gradient(to bottom,#ff9933 0 33.333%,#fff 33.333% 66.666%,#138808 66.666% 100%)!important;box-shadow:0 25px 55px #174d8e22!important;transform:rotate(-7deg)!important;opacity:.95!important;display:block!important;position:relative!important;z-index:4!important;animation:flagBillow 4.2s ease-in-out infinite!important}
+@media(max-width:900px){.hero-card:after{width:230px!important;height:150px!important}}
+@media(max-width:560px){.hero-card:after{width:190px!important;height:124px!important}}
+</style>
+<script id="universal-icon-compat-js">
+(function(){
+  const ICONS={
+    '🏛️':['M3 10h18M5 10V21M9 10V21M15 10V21M19 10V21M3 21h18M4 7l8-4 8 4v3H4V7'],
+    '🧮':['M6 2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM8 6h8M8 11h2M14 11h2M8 15h2M14 15h2M8 19h2M14 19h2'],
+    '📄':['M6 2h9l4 4v16H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM14 2v5h5M8 11h8M8 15h8M8 19h5'],
+    '💼':['M4 7h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2ZM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M2 12h20M10 12v3h4v-3'],
+    '🎓':['M3 10 12 5l9 5-9 5-9-5ZM6 12v5c3 2 9 2 12 0v-5M21 10v7'],
+    '❤️':['M20.8 8.6c0 5.4-8.8 10.2-8.8 10.2S3.2 14 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z'],
+    '🤖':['M8 8h8a4 4 0 0 1 4 4v6H4v-6a4 4 0 0 1 4-4ZM12 4v4M9 13h.01M15 13h.01M8 18v3M16 18v3M4 14H2M22 14h-2'],
+    '🔎':['M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16ZM21 21l-4.3-4.3'],
+    '📅':['M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2ZM7 2v4M17 2v4M3 9h18M7 13h3M14 13h3M7 17h3'],
+    '👩':['M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0M8 4c1-3 7-3 8 0'],
+    '🧑‍💼':['M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM3 21a6 6 0 0 1 12 0M16 8h5M18 6v4M16 15h5M16 19h5'],
+    '🏥':['M3 6h18v15H3V6ZM8 3h8v5H8V3ZM12 9v8M8 13h8'],
+    '🌾':['M12 21V4M12 10c-4-1-6-3-6-6 4 0 6 2 6 6ZM12 15c4-1 6-3 6-6-4 0-6 2-6 6M12 18c-3-1-5-3-5-5 3 0 5 2 5 5'],
+    '🧓':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0M4 7c1-2 3-3 5-3'],
+    '📚':['M4 5a2 2 0 0 1 2-2h5v17H6a2 2 0 0 0-2 2V5ZM20 5a2 2 0 0 0-2-2h-5v17h5a2 2 0 0 1 2 2V5ZM13 4h-2'],
+    '🪪':['M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2ZM7 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM11 10h7M11 14h5'],
+    '🔗':['M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1'],
+    '📁':['M3 6a2 2 0 0 1 2-2h6l2 2h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z'],
+    '📞':['M6 3h3l2 5-2 2a15 15 0 0 0 5 5l2-2 5 2v3a2 2 0 0 1-2 2C10 20 4 14 2 5a2 2 0 0 1 2-2h2'],
+    '📱':['M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2ZM10 18h4'],
+    '📍':['M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12ZM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z'],
+    '👁️':['M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'],
+    '🔊':['M4 9v6h4l5 4V5L8 9H4ZM17 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12'],
+    '🎤':['M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3ZM6 11a6 6 0 0 0 12 0M12 17v4M8 21h8'],
+    '🌐':['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18'],
+    '💰':['M3 7h18v12H3V7ZM7 7V5h10v2M12 11a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z'],
+    '🎂':['M4 10h16v10H4V10ZM2 20h20M12 10V7M12 5v-2M7 10V8M17 10V8M4 14h16'],
+    '🏹':['M3 21 21 3M21 3h-7M21 3v7M6 18l3-3M12 12l3-3'],
+    '⛰️':['M3 20 10 8l4 6 3-4 4 10H3ZM10 8l2-4 2 4'],
+    '✨':['M12 3l1.4 5.6L19 10l-5.6 1.4L12 17l-1.4-5.6L5 10l5.6-1.4L12 3ZM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7L19 16'],
+    '⚕️':['M10 3h4v6h6v4h-6v6h-4v-6H4V9h6V3'],
+    '🗳️':['M4 5h16v12H4V5ZM8 9h8M8 13h5M7 21h10'],
+    '💳':['M3 5h18v14H3V5ZM3 9h18M7 15h5'],
+    '🍚':['M4 12h16M6 12a6 6 0 0 0 12 0M8 17h8M10 20h4'],
+    '🧾':['M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 8h6M9 12h6M9 16h4'],
+    '🏠':['M3 11 12 3l9 8v9H3v-9ZM9 20v-6h6v6'],
+    '🧑':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0'],
+    '💚':['M20.8 8.6c0 5.4-8.8 10.2-8.8 10.2S3.2 14 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z'],
+    '🔮':['M12 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM5 21h14M12 17v4'],
+    '🌱':['M12 21V10M12 13C8 13 5 10 5 6c4 0 7 2 7 7ZM12 16c4 0 7-3 7-7-4 0-7 2-7 7'],
+    '💨':['M3 8h12a3 3 0 1 0-3-3M3 12h17a3 3 0 1 1-3 3M3 16h9'],
+    '🌊':['M3 9c3-3 6 3 9 0s6 3 9 0M3 15c3-3 6 3 9 0s6 3 9 0'],
+    '🦂':['M8 9c-3 0-4 2-4 4 0 2 2 3 4 3 3 0 4-2 4-4V7M12 7V4M12 4h4M16 4v3M16 7c4 0 4 3 3 5M19 12l2 2'],
+    '💧':['M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11Z'],
+    '🐟':['M3 12s4-6 10-6c4 0 7 3 8 6-1 3-4 6-8 6-6 0-10-6-10-6ZM13 10h.01M13 14h.01M21 12l-3-3v6l3-3Z'],
+    '⚖️':['M12 3v18M5 6h14M7 6l-3 7a4 4 0 0 0 8 0L9 6M17 6l-3 7a4 4 0 0 0 8 0l-3-7M7 21h10'],
+    '🏹':['M3 21 21 3M21 3h-7M21 3v7M6 18l3-3M12 12l3-3'],
+    '👤':['M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 22a7 7 0 0 1 14 0'],
+    '⚙️':['M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM19 12l2-1-1-3-2 .2a7 7 0 0 0-1.4-1.4L17 4l-3-1-1 2a7 7 0 0 0-2 0L10 3 7 4l.2 2.8A7 7 0 0 0 5.8 8L3 7l-1 3 2 1a7 7 0 0 0 0 2l-2 1 1 3 2.8-.2a7 7 0 0 0 1.4 1.4L7 20l3 1 1-2a7 7 0 0 0 2 0l1 2 3-1-.2-2.8a7 7 0 0 0 1.4-1.4L20 17l1-3-2-1a7 7 0 0 0 0-1Z']
+  };
+  const keys=Object.keys(ICONS).sort((a,b)=>b.length-a.length);
+  const rx=new RegExp('('+keys.map(k=>k.replace(/[.*+?^${}()|[\\]\\]/g,'\\$&')).join('|')+')','g');
+  function icon(key){
+    const span=document.createElement('span');span.className='as-svg-icon';span.setAttribute('aria-hidden','true');
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',ICONS[key][0]);svg.appendChild(path);span.appendChild(svg);return span;
+  }
+  function walk(root){
+    const nodes=[];const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){
+      const p=n.parentElement;if(!p||/^(SCRIPT|STYLE|TEXTAREA|OPTION)$/i.test(p.tagName))return NodeFilter.FILTER_REJECT;
+      return rx.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;
+    }});
+    let n;while(n=w.nextNode())nodes.push(n);
+    nodes.forEach(n=>{rx.lastIndex=0;const parts=n.nodeValue.split(rx);if(parts.length<2)return;const frag=document.createDocumentFragment();parts.forEach(part=>{if(ICONS[part])frag.appendChild(icon(part));else if(part)frag.appendChild(document.createTextNode(part));});n.parentNode.replaceChild(frag,n);});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>walk(document.body));else walk(document.body);
+})();
+</script>
+
+
+<style id="as-v9-multimodal-style">
+.as-ai-tools{margin-top:12px;padding:14px;border:1px solid rgba(26,69,112,.12);border-radius:18px;background:rgba(255,255,255,.72);box-shadow:0 10px 30px rgba(20,60,110,.06)}
+.as-ai-tool-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:900;color:#12345a;margin-bottom:10px}
+.as-ai-tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.as-ai-tool{border:1px solid rgba(26,69,112,.13);background:#fff;border-radius:13px;padding:10px 8px;cursor:pointer;font-weight:800;font-size:12px;transition:.2s;min-height:44px}
+.as-ai-tool:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(16,65,120,.11)}
+.as-ai-tool.active{outline:2px solid rgba(8,119,69,.28);background:linear-gradient(135deg,#fff8ee,#f1fff7)}
+.as-ai-file{display:none}
+.as-ai-attachments{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.as-ai-attachment{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f7fafc;border:1px solid #d9e4ee;border-radius:12px;font-size:12px;font-weight:700}
+.as-ai-attachment img{width:42px;height:42px;object-fit:cover;border-radius:9px}
+.as-ai-remove{border:0;background:transparent;cursor:pointer;font-size:16px}
+.as-ai-modal{position:fixed;inset:0;background:rgba(4,18,35,.65);backdrop-filter:blur(5px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px}
+.as-ai-modal.show{display:flex}.as-ai-modal-box{width:min(720px,100%);background:#fff;border-radius:22px;padding:16px;box-shadow:0 30px 90px rgba(0,0,0,.3)}
+.as-ai-modal-head{display:flex;justify-content:space-between;align-items:center;font-weight:900;margin-bottom:12px}.as-ai-close{border:0;background:#edf3f8;border-radius:10px;padding:8px 11px;cursor:pointer}
+#asCameraVideo{width:100%;max-height:62vh;object-fit:contain;background:#071522;border-radius:16px}.as-camera-actions{display:flex;gap:10px;margin-top:12px}.as-camera-actions button{flex:1}
+.as-ai-result{margin-top:12px;padding:12px;border-radius:14px;background:#f6fafc;border:1px solid #dce7ef;font-size:13px;line-height:1.55}
+.as-ai-note{font-size:11px;color:#60748b;margin-top:8px}.as-download{margin-top:10px;display:inline-flex!important;align-items:center;gap:5px;padding:8px 11px!important;font-size:12px}.ai .as-ai-tools{margin-top:18px}
+@media(max-width:760px){.as-ai-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.as-ai-tools{padding:11px}.as-ai-tool{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.as-ai-tool{transition:none}.as-ai-tool:hover{transform:none}}
+</style>
+
+
+
+
 
 </body></html>
